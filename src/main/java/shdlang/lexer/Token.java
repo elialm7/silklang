@@ -10,6 +10,14 @@ public class Token {
         this.type = type;
     }
 
+    @Override
+    public String toString() {
+        return "Token{" +
+                "value='" + value + '\'' +
+                ", type=" + type +
+                '}';
+    }
+
     public String getValue() {
         return value;
     }
@@ -25,4 +33,6 @@ public class Token {
     public void setType(TokenType type) {
         this.type = type;
     }
+
+
 }
