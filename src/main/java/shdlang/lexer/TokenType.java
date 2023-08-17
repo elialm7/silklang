@@ -9,4 +9,6 @@ public enum TokenType {
     EQUALS,
     OPENPAREN,
     ClOSEPAREN,
+    NUMBER,
+    IDENTIFIER
 }
