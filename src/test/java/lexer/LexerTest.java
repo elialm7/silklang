@@ -1,3 +1,5 @@
+package lexer;
+
 import jdk.jfr.BooleanFlag;
 import org.junit.Before;
 import org.junit.Test;
