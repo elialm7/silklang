@@ -1,38 +1,56 @@
 package shdlang.lexer;
 
-public class Token {
-    private String value;
-    private TokenType type;
+import java.util.Objects;
 
-    public Token(){}
-    public Token(String value, TokenType type){
-        this.value = value;
+public class Token {
+    private final TokenType type;
+    private final String lexeme;
+    private final Object literal;
+    private final int line;
+
+    public Token(TokenType type, String lexeme, Object literal, int line) {
+
         this.type = type;
+        this.lexeme = lexeme;
+        this.literal = literal;
+        this.line = line;
+    }
+    public TokenType getType() {
+        return type;
+    }
+
+    public String getLexeme() {
+        return lexeme;
+    }
+
+    public Object getLiteral() {
+        return literal;
+    }
+
+    public int getLine() {
+        return line;
     }
 
     @Override
     public String toString() {
         return "Token{" +
-                "value='" + value + '\'' +
-                ", type=" + type +
+                "type=" + type +
+                ", lexeme='" + lexeme + '\'' +
+                ", literal=" + literal +
+                ", line=" + line +
                 '}';
     }
 
-    public String getValue() {
-        return value;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Token token = (Token) o;
+        return getLine() == token.getLine() && getType() == token.getType() && Objects.equals(getLexeme(), token.getLexeme()) && Objects.equals(getLiteral(), token.getLiteral());
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    @Override
+    public int hashCode() {
+        return Objects.hash(getType(), getLexeme(), getLiteral(), getLine());
     }
-
-    public TokenType getType() {
-        return type;
-    }
-
-    public void setType(TokenType type) {
-        this.type = type;
-    }
-
-
 }
