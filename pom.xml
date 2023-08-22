@@ -39,6 +39,7 @@
                 </executions>
             </plugin>
         </plugins>
+        <finalName>shdint</finalName>
     </build>
     <dependencies>
         <dependency>
