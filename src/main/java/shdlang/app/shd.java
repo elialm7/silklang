@@ -36,12 +36,16 @@ public class shd {
     static void runPromt() throws IOException{
         InputStreamReader input = new InputStreamReader(System.in);
         BufferedReader reader = new BufferedReader(input);
-        while (true) {
-            System.out.println("> ");
-            String line = reader.readLine();
+        String line = "";
+        do{
+            System.out.print("> ");
+             line = reader.readLine();
+            if(line.equalsIgnoreCase("exit")){
+                break;
+            }
             run(line);
             haderror = false;
-        }
+        }while(!line.equalsIgnoreCase("exit"));
     }
 
     private static void run(String source){
