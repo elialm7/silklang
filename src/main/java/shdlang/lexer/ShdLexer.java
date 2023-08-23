@@ -32,49 +32,21 @@ public class ShdLexer {
     private void scanToken(){
         char c = advance();
         switch (c) {
-            case '(':
-                addToken(LEFT_PAREN);
-                break;
-            case ')':
-                addToken(RIGHT_PAREN);
-                break;
-            case '{':
-                addToken(LEFT_BRACE);
-                break;
-            case '}':
-                addToken(RIGHT_BRACE);
-                break;
-            case ',':
-                addToken(COMMA);
-                break;
-            case '.':
-                addToken(DOT);
-                break;
-            case '-':
-                addToken(MINUS);
-                break;
-            case '+':
-                addToken(PLUS);
-                break;
-            case ';':
-                addToken(SEMICOLON);
-                break;
-            case '*':
-                addToken(STAR);
-                break;
-            case '!':
-                addToken(match('=') ? BANG_EQUAL : BANG);
-                break;
-            case '=':
-                addToken(match('=') ? EQUAL_EQUAL : EQUAL);
-                break;
-            case '<':
-                addToken(match('=') ? LESS_EQUAL : LESS);
-                break;
-            case '>':
-                addToken(match('=') ? GREATER_EQUAL : GREATER);
-                break;
-            case '/':
+            case '(' -> addToken(LEFT_PAREN);
+            case ')' -> addToken(RIGHT_PAREN);
+            case '{' -> addToken(LEFT_BRACE);
+            case '}' -> addToken(RIGHT_BRACE);
+            case ',' -> addToken(COMMA);
+            case '.' -> addToken(DOT);
+            case '-' -> addToken(MINUS);
+            case '+' -> addToken(PLUS);
+            case ';' -> addToken(SEMICOLON);
+            case '*' -> addToken(STAR);
+            case '!' -> addToken(match('=') ? BANG_EQUAL : BANG);
+            case '=' -> addToken(match('=') ? EQUAL_EQUAL : EQUAL);
+            case '<' -> addToken(match('=') ? LESS_EQUAL : LESS);
+            case '>' -> addToken(match('=') ? GREATER_EQUAL : GREATER);
+            case '/' -> {
                 if (match('/')) {
                     while (peek() != '\n' && !isAtEnd()) {
                         advance();
@@ -82,39 +54,28 @@ public class ShdLexer {
                 } else {
                     addToken(SLASH);
                 }
-                break;
-            case ' ':
-            case '\r':
-            case '\t':
-                // Ignore whitespace.
-                break;
-            case '\n':
-                line++;
-                break;
-            case '"':
-                string();
-                break;
-            case 'o':
-                if (peek() == 'r') {
-                    addToken(OR);
-                }
-                break;
-            default:
+            }
+            case ' ', '\r', '\t' -> {
+            }
+            // Ignore whitespace.
+            case '\n' -> line++;
+            case '"' -> string();
+            default -> {
                 if (isDigit(c)) {
                     number();
-                } else if(isAlpha(c)){
+                } else if (isAlpha(c)) {
                     identifier();
-                }
-                else {
+                } else {
                     shd.error(line, "Unexpected character. ");
                 }
-                break;
+            }
         }
     }
 
     private boolean isAlphaNumeric(char c){
         return isAlpha(c) || isDigit(c);
     }
+
     private boolean isAlpha(char c ){
         return  (c >= 'a' && c <= 'z') ||
                 (c >= 'A' && c <= 'Z') ||
