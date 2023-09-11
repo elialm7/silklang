@@ -1,11 +1,8 @@
 package lexer;
 
-import jdk.jfr.BooleanFlag;
-import org.junit.Before;
 import org.junit.Test;
-import shdlang.lexer.ShdLexer;
-import shdlang.lexer.Token;
-import shdlang.lexer.TokenType;
+import silklang.Lexer.SilkLexer;
+import silklang.Lexer.Token;
 
 import java.util.List;
 
@@ -14,7 +11,7 @@ public class LexerTest {
     public void testVariableDeclaration(){
         String testcode = "var hola = \"hello\" ";
         System.out.println(testcode);
-        ShdLexer lexer = new ShdLexer(testcode);
+        SilkLexer lexer = new SilkLexer(testcode);
         List<Token> tokens = lexer.tokenize();
         for(Token tk: tokens){
             System.out.println(tk);

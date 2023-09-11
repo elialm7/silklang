@@ -1,14 +1,14 @@
 package ast;
 
 import org.junit.Test;
-import shdlang.Expressions.base.Expr;
-import shdlang.Expressions.representations.Binary;
-import shdlang.Expressions.representations.Grouping;
-import shdlang.Expressions.representations.Literal;
-import shdlang.Expressions.representations.Unary;
-import shdlang.ast.AstPrinter;
-import shdlang.lexer.Token;
-import shdlang.lexer.TokenType;
+import silklang.Expressions.base.Expr;
+import silklang.Expressions.representations.Binary;
+import silklang.Expressions.representations.Grouping;
+import silklang.Expressions.representations.Literal;
+import silklang.Expressions.representations.Unary;
+import silklang.Ast.AstPrinter;
+import silklang.Lexer.Token;
+import silklang.Lexer.TokenType;
 
 public class AstPrinterTest {
 
