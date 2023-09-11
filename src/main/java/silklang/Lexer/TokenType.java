@@ -1,4 +1,4 @@
-package shdlang.lexer;
+package silklang.Lexer;
 
 public enum TokenType {
     //single-character tokens

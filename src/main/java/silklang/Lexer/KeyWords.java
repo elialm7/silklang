@@ -1,9 +1,9 @@
-package shdlang.lexer;
+package silklang.Lexer;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static shdlang.lexer.TokenType.*;
+import static silklang.Lexer.TokenType.*;
 
 
 public class KeyWords {

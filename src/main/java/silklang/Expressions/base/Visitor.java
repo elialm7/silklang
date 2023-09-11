@@ -1,6 +1,6 @@
-package shdlang.Expressions.base;
+package silklang.Expressions.base;
 
-import shdlang.Expressions.representations.*;
+import silklang.Expressions.representations.*;
 
 public interface Visitor<T> {
     T visitAssignExpr(Assign expr);

@@ -1,8 +1,8 @@
-package shdlang.Expressions.representations;
+package silklang.Expressions.representations;
 
-import shdlang.Expressions.base.Visitor;
-import shdlang.Expressions.base.Expr;
-import shdlang.lexer.Token;
+import silklang.Expressions.base.Visitor;
+import silklang.Expressions.base.Expr;
+import silklang.Lexer.Token;
 
 public class Super extends Expr {
     private Token keyword;

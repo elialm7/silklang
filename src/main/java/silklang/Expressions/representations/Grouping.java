@@ -1,7 +1,7 @@
-package shdlang.Expressions.representations;
+package silklang.Expressions.representations;
 
-import shdlang.Expressions.base.Visitor;
-import shdlang.Expressions.base.Expr;
+import silklang.Expressions.base.Visitor;
+import silklang.Expressions.base.Expr;
 
 public class Grouping extends Expr {
    private Expr expression;

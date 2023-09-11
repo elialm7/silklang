@@ -1,14 +1,14 @@
-package shdlang.lexer;
+package silklang.Lexer;
 
-import shdlang.app.shd;
+import silklang.App.silk;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static shdlang.lexer.TokenType.*;
+import static silklang.Lexer.TokenType.*;
 
 
-public class ShdLexer {
+public class SilkLexer {
 
     private final String source;
     private final List<Token> tokens;
@@ -16,7 +16,7 @@ public class ShdLexer {
     private int current = 0;
     private int line = 1;
 
-    public ShdLexer(String source){
+    public SilkLexer(String source){
         this.source = source;
         this.tokens = new ArrayList<>();
     }
@@ -66,7 +66,7 @@ public class ShdLexer {
                 } else if (isAlpha(c)) {
                     identifier();
                 } else {
-                    shd.error(line, "Unexpected character. ");
+                    silk.error(line, "Unexpected character. ");
                 }
             }
         }
@@ -129,7 +129,7 @@ public class ShdLexer {
             advance();
         }
         if(isAtEnd()){
-            shd.error(line, "Unterminated String");
+            silk.error(line, "Unterminated String");
             return;
         }
         advance();

@@ -1,9 +1,13 @@
-package shdlang.app;
+package silklang.App;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import shdlang.lexer.ShdLexer;
-import shdlang.lexer.Token;
+import silklang.Error.RuntimeError;
+import silklang.Expressions.base.Expr;
+import silklang.Ast.AstPrinter;
+import silklang.Interpreter.Interpreter;
+import silklang.Lexer.SilkLexer;
+import silklang.Lexer.Token;
+import silklang.Lexer.TokenType;
+import silklang.Parser.SilkParser;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,9 +17,11 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-public class shd {
+public class silk {
 
+    private static Interpreter interpreter = new Interpreter();
     static boolean haderror = false;
+    static boolean hadRuntimeError = false;
     public static void main(String[] args) throws IOException{
         if(args.length > 1){
             System.out.println("Usage: shd [Script] ");
@@ -32,6 +38,8 @@ public class shd {
         run(new String(bytes, Charset.defaultCharset()));
         if(haderror)
             System.exit(65);
+        if(hadRuntimeError)
+            System.exit(70);
     }
     static void runPromt() throws IOException{
         InputStreamReader input = new InputStreamReader(System.in);
@@ -49,21 +57,35 @@ public class shd {
     }
 
     private static void run(String source){
-        ShdLexer lexer = new ShdLexer(source);
+        SilkLexer lexer = new SilkLexer(source);
         List<Token> tokens = lexer.tokenize();
-        for(Token token : tokens){
-            System.out.println(token);
-        }
+        SilkParser parser = new SilkParser(tokens);
+        Expr expression = parser.parse();
+        if(haderror) return;
+        interpreter.interpret(expression);
     }
 
     public static void error(int line, String message){
         report(line, "", message);
-
     }
 
+    public static void error(Token token, String message){
+
+        if(token.getType()== TokenType.EOF){
+            report(token.getLine(), " at end ", message);
+        }else{
+            report(token.getLine(), "at '"+token.getLexeme() +"'", message );
+        }
+    }
     private static void report(int line, String where, String message){
         System.err.println("[line " + line + "] Error" + where + ": " + message);
         haderror = true;
+    }
+
+    public static void runtimeError(RuntimeError error){
+            System.err.println(error.getMessage() +
+                    "\n[line " + error.getToken().getLine() + "]");
+            hadRuntimeError = true;
     }
 }
 

@@ -1,4 +1,4 @@
-package shdlang.lexer;
+package silklang.Lexer;
 
 import java.util.Objects;
 

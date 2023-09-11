@@ -1,8 +1,8 @@
-package shdlang.ast;
+package silklang.Ast;
 
-import shdlang.Expressions.base.Expr;
-import shdlang.Expressions.base.Visitor;
-import shdlang.Expressions.representations.*;
+import silklang.Expressions.base.Expr;
+import silklang.Expressions.base.Visitor;
+import silklang.Expressions.representations.*;
 
 public class AstPrinter implements Visitor<String> {
 
