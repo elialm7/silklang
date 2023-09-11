@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org</groupId>
-    <artifactId>shdlang</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>silklang</artifactId>
+    <version>1.0.0</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -37,7 +37,7 @@
                 </executions>
             </plugin>
         </plugins>
-        <finalName>shdint</finalName>
+        <finalName>silkint-${project.version}</finalName>
     </build>
     <dependencies>
         <dependency>
