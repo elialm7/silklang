@@ -1,3 +1,9 @@
+
+/*
+ * Copyright (c) under GPL V3. Read LICENSE located in the root of the project.
+ * All rights reserved.
+ */
+
 package silklang.Interpreter;
 
 import silklang.App.silk;
@@ -7,7 +13,6 @@ import silklang.Expressions.base.Visitor;
 import silklang.Expressions.representations.*;
 import silklang.Lexer.Token;
 
-import java.sql.SQLOutput;
 
 public class Interpreter implements Visitor<Object> {
 
@@ -50,17 +55,17 @@ public class Interpreter implements Visitor<Object> {
 
     private void checkNumberOperand(Token operator, Object operand){
         if(operand instanceof Double)return;
-        throw new RuntimeError(operator, "Operand must be a number");
+        throw new RuntimeError(operator, "El operando debe ser un numero. ");
     }
 
     private void checkNumberOperands(Token operator, Object left, Object right){
         if(left instanceof Double && right instanceof Double)return;
-        throw new RuntimeError(operator, "Operands must be numbers ");
+        throw new RuntimeError(operator, "Los operandos tienen que ser un numeros. ");
 
     }
     private void divisionbyZero(Token operator, Object left, Object right){
         if((double)right!=0)return;
-        throw new RuntimeError(operator, "Division by zero is not allowed");
+        throw new RuntimeError(operator, "La division por cero no esta permitida.");
     }
 
 

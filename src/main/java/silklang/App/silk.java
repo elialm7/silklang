@@ -1,3 +1,10 @@
+
+
+/*
+ * Copyright (c) under GPL V3. Read LICENSE located in the root of the project.
+ * All rights reserved.
+ */
+
 package silklang.App;
 
 import silklang.Error.RuntimeError;
@@ -24,7 +31,7 @@ public class silk {
     static boolean hadRuntimeError = false;
     public static void main(String[] args) throws IOException{
         if(args.length > 1){
-            System.out.println("Usage: shd [Script] ");
+            System.out.println("Uso: [script] ");
             System.exit(64);
         }
         if(args.length == 1 ){
@@ -44,9 +51,14 @@ public class silk {
     static void runPromt() throws IOException{
         InputStreamReader input = new InputStreamReader(System.in);
         BufferedReader reader = new BufferedReader(input);
+        System.out.println("Bienvenido a silk interpreter version Alpha.[No ANTLR] ");
+        System.out.println("Esta es una version de funcionamiento. El Interprete aun no esta terminado. ");
+        System.out.println("Funcionalidad disponibles: Operaciones aritmeticas y logicas basicas. Para salir escriba 'exit' ");
+        System.out.println("Developer: R. Elias Ojeda Almada.");
+        System.out.println("Copyright (c) under GPL V3. ");
         String line = "";
         do{
-            System.out.print("> ");
+            System.out.print(">> ");
              line = reader.readLine();
             if(line.equalsIgnoreCase("exit")){
                 break;
@@ -72,19 +84,19 @@ public class silk {
     public static void error(Token token, String message){
 
         if(token.getType()== TokenType.EOF){
-            report(token.getLine(), " at end ", message);
+            report(token.getLine(), " al final ", message);
         }else{
-            report(token.getLine(), "at '"+token.getLexeme() +"'", message );
+            report(token.getLine(), "en  '"+token.getLexeme() +"'", message );
         }
     }
     private static void report(int line, String where, String message){
-        System.err.println("[line " + line + "] Error" + where + ": " + message);
+        System.err.println("[linea " + line + "] error" + where + ": " + message);
         haderror = true;
     }
 
     public static void runtimeError(RuntimeError error){
             System.err.println(error.getMessage() +
-                    "\n[line " + error.getToken().getLine() + "]");
+                    "\n[linea " + error.getToken().getLine() + "]");
             hadRuntimeError = true;
     }
 }

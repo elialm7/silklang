@@ -1,3 +1,9 @@
+
+/*
+ * Copyright (c) under GPL V3. Read LICENSE located in the root of the project.
+ * All rights reserved.
+ */
+
 package silklang.Parser;
 
 import silklang.Error.ParseError;
@@ -93,10 +99,10 @@ public class SilkParser {
         }
         if(match(LEFT_PAREN)){
             Expr expr = expression();
-            consume(RIGHT_PAREN, "Expected ')' after expression. ");
+            consume(RIGHT_PAREN, "Se espera una  ')' despues de una expresion. ");
             return new Grouping(expr);
         }
-       throw error(peek(), "expected expression. ");
+       throw error(peek(), "Se esperaba una expresion. ");
     }
     public Expr parse(){
         try{
