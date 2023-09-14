@@ -1,5 +1,11 @@
 // this is the grammar we are using for the parser
 // we are going to use the recursive descent method, which is a top-down parser.
+
+program → statement* EOF ;
+statement → exprStmt | printStmt ;
+exprStmt → expression ";" ;
+printStmt → "print" expression ";" ;
+
 expression → equality ;
 equality → comparison ( ( "!=" | "==" ) comparison )* ;
 comparison → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
