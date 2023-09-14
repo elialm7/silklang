@@ -23,7 +23,7 @@
                     <createDependencyReducedPom>false</createDependencyReducedPom>
                     <transformers>
                         <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                            <mainClass>silklang.App.silk</mainClass>
+                            <mainClass>silklang.App.Silk</mainClass>
                         </transformer>
                     </transformers>
                 </configuration>
