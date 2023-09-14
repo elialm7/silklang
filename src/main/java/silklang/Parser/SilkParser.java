@@ -15,7 +15,11 @@ import silklang.ParserRepresentation.Expressions.representations.Unary;
 import silklang.App.Silk;
 import silklang.Lexer.Token;
 import silklang.Lexer.TokenType;
+import silklang.ParserRepresentation.Statement.Representation.Expression;
+import silklang.ParserRepresentation.Statement.Representation.Print;
+import silklang.ParserRepresentation.Statement.base.Stmt;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static silklang.Lexer.TokenType.*;
@@ -28,6 +32,47 @@ public class SilkParser {
     public SilkParser(List<Token> tokens){
         this.tokens = tokens;
 
+    }
+    @Deprecated
+    public Expr parse(){
+        try{
+            return expression();
+        }catch (ParseError error){
+            return null;
+        }
+    }
+
+    public List<Stmt> parseTokens(){
+        try {
+            List<Stmt> statements = new ArrayList<>();
+            while (!isAtEnd()) {
+                statements.add(statement());
+            }
+            return statements;
+        }catch (ParseError error){
+            return null;
+        }
+    }
+
+    private Stmt statement(){
+
+        if(match(PRINT)) return printStatement();
+
+        return expressionStatement();
+
+
+    }
+
+    private Stmt printStatement(){
+        Expr value = expression();
+        consume(SEMICOLON, " se esperaba ';' despues del valor.");
+        return new Print(value);
+    }
+
+    private Stmt expressionStatement(){
+        Expr expression = expression();
+        consume(SEMICOLON, "se esperaba ';' despues de la expresion.");
+        return new Expression(expression);
     }
 
     private Expr expression(){
@@ -104,13 +149,7 @@ public class SilkParser {
         }
        throw error(peek(), "Se esperaba una expresion. ");
     }
-    public Expr parse(){
-        try{
-            return expression();
-        }catch (ParseError error){
-            return null;
-        }
-    }
+
     private Token consume(TokenType type, String message){
         if(check(type)) return advance();
         throw error(peek(),message);

@@ -15,6 +15,7 @@ import silklang.Lexer.SilkLexer;
 import silklang.Lexer.Token;
 import silklang.Lexer.TokenType;
 import silklang.Parser.SilkParser;
+import silklang.ParserRepresentation.Statement.base.Stmt;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -72,9 +73,10 @@ public class Silk {
         SilkLexer lexer = new SilkLexer(source);
         List<Token> tokens = lexer.tokenize();
         SilkParser parser = new SilkParser(tokens);
-        Expr expression = parser.parse();
+        //Expr expression = parser.parse();
+        List<Stmt> statements = parser.parseTokens();
         if(haderror) return;
-        interpreter.interpret(expression);
+        interpreter.interpret(statements);
     }
 
     public static void error(int line, String message){

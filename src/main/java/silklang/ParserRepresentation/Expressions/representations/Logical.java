@@ -6,7 +6,7 @@
 
 package silklang.ParserRepresentation.Expressions.representations;
 
-import silklang.ParserRepresentation.Expressions.base.Visitor;
+import silklang.ParserRepresentation.Expressions.base.ExprVisitor;
 import silklang.ParserRepresentation.Expressions.base.Expr;
 import silklang.Lexer.Token;
 
@@ -46,7 +46,7 @@ public class Logical extends Expr {
     }
 
     @Override
-    public <T> T accept(Visitor<T> visitor) {
+    public <T> T accept(ExprVisitor<T> exprVisitor) {
         return null;
     }
 }

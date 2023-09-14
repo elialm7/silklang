@@ -6,7 +6,7 @@
 
 package silklang.ParserRepresentation.Expressions.representations;
 
-import silklang.ParserRepresentation.Expressions.base.Visitor;
+import silklang.ParserRepresentation.Expressions.base.ExprVisitor;
 import silklang.ParserRepresentation.Expressions.base.Expr;
 
 public class Literal extends Expr {
@@ -26,7 +26,7 @@ public class Literal extends Expr {
     }
 
     @Override
-    public <T> T accept(Visitor<T> visitor) {
-        return visitor.visitLiteralExpr(this);
+    public <T> T accept(ExprVisitor<T> exprVisitor) {
+        return exprVisitor.visitLiteralExpr(this);
     }
 }

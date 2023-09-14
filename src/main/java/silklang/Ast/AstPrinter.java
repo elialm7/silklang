@@ -1,10 +1,10 @@
 package silklang.Ast;
 
 import silklang.ParserRepresentation.Expressions.base.Expr;
-import silklang.ParserRepresentation.Expressions.base.Visitor;
+import silklang.ParserRepresentation.Expressions.base.ExprVisitor;
 import silklang.ParserRepresentation.Expressions.representations.*;
 
-public class AstPrinter implements Visitor<String> {
+public class AstPrinter implements ExprVisitor<String> {
 
     public String print(Expr expr){
         return expr.accept(this);

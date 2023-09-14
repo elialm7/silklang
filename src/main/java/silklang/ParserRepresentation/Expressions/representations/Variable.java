@@ -6,7 +6,7 @@
 
 package silklang.ParserRepresentation.Expressions.representations;
 
-import silklang.ParserRepresentation.Expressions.base.Visitor;
+import silklang.ParserRepresentation.Expressions.base.ExprVisitor;
 import silklang.ParserRepresentation.Expressions.base.Expr;
 import silklang.Lexer.Token;
 
@@ -27,7 +27,7 @@ public class Variable extends Expr {
     }
 
     @Override
-    public <T> T accept(Visitor<T> visitor) {
-        return visitor.visitVariableExpr(this);
+    public <T> T accept(ExprVisitor<T> exprVisitor) {
+        return exprVisitor.visitVariableExpr(this);
     }
 }

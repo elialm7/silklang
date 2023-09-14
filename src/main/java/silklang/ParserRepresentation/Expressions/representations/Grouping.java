@@ -6,7 +6,7 @@
 
 package silklang.ParserRepresentation.Expressions.representations;
 
-import silklang.ParserRepresentation.Expressions.base.Visitor;
+import silklang.ParserRepresentation.Expressions.base.ExprVisitor;
 import silklang.ParserRepresentation.Expressions.base.Expr;
 
 public class Grouping extends Expr {
@@ -25,7 +25,7 @@ public class Grouping extends Expr {
     }
 
     @Override
-    public <T> T accept(Visitor<T> visitor) {
-        return visitor.visitGroupingExpr(this);
+    public <T> T accept(ExprVisitor<T> exprVisitor) {
+        return exprVisitor.visitGroupingExpr(this);
     }
 }

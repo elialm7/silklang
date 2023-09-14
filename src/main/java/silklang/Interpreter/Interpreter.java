@@ -9,13 +9,20 @@ package silklang.Interpreter;
 import silklang.App.Silk;
 import silklang.Error.RuntimeError;
 import silklang.ParserRepresentation.Expressions.base.Expr;
-import silklang.ParserRepresentation.Expressions.base.Visitor;
+import silklang.ParserRepresentation.Expressions.base.ExprVisitor;
 import silklang.Lexer.Token;
 import silklang.ParserRepresentation.Expressions.representations.*;
+import silklang.ParserRepresentation.Statement.Representation.Expression;
+import silklang.ParserRepresentation.Statement.Representation.Print;
+import silklang.ParserRepresentation.Statement.base.Stmt;
+import silklang.ParserRepresentation.Statement.base.StmtVisitor;
+
+import java.util.List;
 
 
-public class Interpreter implements Visitor<Object> {
+public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
 
+    @Deprecated
     public void interpret(Expr expression){
         try{
             Object value = evaluate(expression);
@@ -23,8 +30,22 @@ public class Interpreter implements Visitor<Object> {
         }catch (RuntimeError error){
             Silk.runtimeError(error);
         }
-
     }
+
+    public void interpret(List<Stmt> statements){
+
+        try{
+            for(Stmt st: statements){
+                execute(st);
+            }
+        }catch (RuntimeError error){
+            Silk.runtimeError(error);
+        }
+    }
+    private void execute(Stmt st){
+        st.accept(this);
+    }
+
     private String stringify(Object object) {
         if (object == null) return "nil";
         if (object instanceof Double) {
@@ -174,6 +195,21 @@ public class Interpreter implements Visitor<Object> {
 
     @Override
     public Object visitVariableExpr(Variable expr) {
+
+
+        return null;
+    }
+
+    @Override
+    public Void visitExpressionStmt(Expression expr) {
+        evaluate(expr.getExpr());
+        return null;
+    }
+
+    @Override
+    public Void visitPrintStmt(Print pr) {
+        Object value = evaluate(pr.getExpr());
+        System.out.println(stringify(value));
         return null;
     }
 }
