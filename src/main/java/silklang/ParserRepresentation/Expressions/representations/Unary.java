@@ -4,30 +4,22 @@
  * All rights reserved.
  */
 
-package silklang.Expressions.representations;
+package silklang.ParserRepresentation.Expressions.representations;
 
-import silklang.Expressions.base.Visitor;
-import silklang.Expressions.base.Expr;
+import silklang.ParserRepresentation.Expressions.base.Visitor;
+import silklang.ParserRepresentation.Expressions.base.Expr;
 import silklang.Lexer.Token;
 
-public class Logical extends Expr {
-    private Expr left;
+public class Unary extends Expr {
+
     private Token operator;
     private Expr right;
 
-    public Logical(Expr left, Token operator, Expr right) {
-        this.left = left;
+    public Unary(Token operator, Expr right) {
         this.operator = operator;
         this.right = right;
     }
 
-    public Expr getLeft() {
-        return left;
-    }
-
-    public void setLeft(Expr left) {
-        this.left = left;
-    }
 
     public Token getOperator() {
         return operator;
@@ -47,6 +39,6 @@ public class Logical extends Expr {
 
     @Override
     public <T> T accept(Visitor<T> visitor) {
-        return null;
+        return visitor.visitUnaryExpr(this);
     }
 }

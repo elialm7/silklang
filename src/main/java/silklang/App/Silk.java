@@ -9,7 +9,7 @@
 package silklang.App;
 
 import silklang.Error.RuntimeError;
-import silklang.Expressions.base.Expr;
+import silklang.ParserRepresentation.Expressions.base.Expr;
 import silklang.Interpreter.Interpreter;
 import silklang.Lexer.SilkLexer;
 import silklang.Lexer.Token;

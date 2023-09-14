@@ -4,7 +4,7 @@
  * All rights reserved.
  */
 
-package silklang.Expressions.base;
+package silklang.ParserRepresentation.Expressions.base;
 
 public abstract class Expr {
     public abstract <T> T accept(Visitor<T> visitor);

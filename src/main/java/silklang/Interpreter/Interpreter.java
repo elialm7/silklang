@@ -8,10 +8,10 @@ package silklang.Interpreter;
 
 import silklang.App.Silk;
 import silklang.Error.RuntimeError;
-import silklang.Expressions.base.Expr;
-import silklang.Expressions.base.Visitor;
-import silklang.Expressions.representations.*;
+import silklang.ParserRepresentation.Expressions.base.Expr;
+import silklang.ParserRepresentation.Expressions.base.Visitor;
 import silklang.Lexer.Token;
+import silklang.ParserRepresentation.Expressions.representations.*;
 
 
 public class Interpreter implements Visitor<Object> {

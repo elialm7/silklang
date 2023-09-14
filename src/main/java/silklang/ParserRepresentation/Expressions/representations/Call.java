@@ -4,10 +4,10 @@
  * All rights reserved.
  */
 
-package silklang.Expressions.representations;
+package silklang.ParserRepresentation.Expressions.representations;
 
-import silklang.Expressions.base.Visitor;
-import silklang.Expressions.base.Expr;
+import silklang.ParserRepresentation.Expressions.base.Visitor;
+import silklang.ParserRepresentation.Expressions.base.Expr;
 import silklang.Lexer.Token;
 
 import java.util.List;

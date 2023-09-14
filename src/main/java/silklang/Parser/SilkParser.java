@@ -7,11 +7,11 @@
 package silklang.Parser;
 
 import silklang.Error.ParseError;
-import silklang.Expressions.base.Expr;
-import silklang.Expressions.representations.Binary;
-import silklang.Expressions.representations.Grouping;
-import silklang.Expressions.representations.Literal;
-import silklang.Expressions.representations.Unary;
+import silklang.ParserRepresentation.Expressions.base.Expr;
+import silklang.ParserRepresentation.Expressions.representations.Binary;
+import silklang.ParserRepresentation.Expressions.representations.Grouping;
+import silklang.ParserRepresentation.Expressions.representations.Literal;
+import silklang.ParserRepresentation.Expressions.representations.Unary;
 import silklang.App.Silk;
 import silklang.Lexer.Token;
 import silklang.Lexer.TokenType;

@@ -4,9 +4,10 @@
  * All rights reserved.
  */
 
-package silklang.Expressions.base;
+package silklang.ParserRepresentation.Expressions.base;
 
 import silklang.Expressions.representations.*;
+import silklang.ParserRepresentation.Expressions.representations.*;
 
 public interface Visitor<T> {
     T visitAssignExpr(Assign expr);
