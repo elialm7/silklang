@@ -5,17 +5,14 @@
  */
 
 package silklang.ParserRepresentation.Expressions.base;
-
-import silklang.Expressions.representations.*;
 import silklang.ParserRepresentation.Expressions.representations.*;
 
-public interface Visitor<T> {
+public interface ExprVisitor<T> {
     T visitAssignExpr(Assign expr);
     T visitBinaryExpr(Binary expr);
     T visitCallExpr(Call expr);
     T visitGetExpr(Get expr);
-    T
-    visitGroupingExpr(Grouping expr);
+    T visitGroupingExpr(Grouping expr);
     T visitLiteralExpr(Literal expr);
     T visitLogicalExpr(Logical expr);
     T  visitSetExpr(Set expr);
