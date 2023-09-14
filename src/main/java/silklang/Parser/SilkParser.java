@@ -12,7 +12,7 @@ import silklang.Expressions.representations.Binary;
 import silklang.Expressions.representations.Grouping;
 import silklang.Expressions.representations.Literal;
 import silklang.Expressions.representations.Unary;
-import silklang.App.silk;
+import silklang.App.Silk;
 import silklang.Lexer.Token;
 import silklang.Lexer.TokenType;
 
@@ -117,7 +117,7 @@ public class SilkParser {
     }
 
     private ParseError error(Token token, String message){
-        silk.error(token, message);
+        Silk.error(token, message);
         return new ParseError();
     }
     private void synchronize(){

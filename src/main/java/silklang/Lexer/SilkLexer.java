@@ -6,7 +6,7 @@
 
 package silklang.Lexer;
 
-import silklang.App.silk;
+import silklang.App.Silk;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +72,7 @@ public class SilkLexer {
                 } else if (isAlpha(c)) {
                     identifier();
                 } else {
-                    silk.error(line, "Unexpected character. ");
+                    Silk.error(line, "Unexpected character. ");
                 }
             }
         }
@@ -135,7 +135,7 @@ public class SilkLexer {
             advance();
         }
         if(isAtEnd()){
-            silk.error(line, "Unterminated String");
+            Silk.error(line, "Unterminated String");
             return;
         }
         advance();

@@ -10,7 +10,6 @@ package silklang.App;
 
 import silklang.Error.RuntimeError;
 import silklang.Expressions.base.Expr;
-import silklang.Ast.AstPrinter;
 import silklang.Interpreter.Interpreter;
 import silklang.Lexer.SilkLexer;
 import silklang.Lexer.Token;
@@ -25,9 +24,9 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-public class silk {
+public class Silk {
 
-    private static Interpreter interpreter = new Interpreter();
+    private static final Interpreter interpreter = new Interpreter();
     static boolean haderror = false;
     static boolean hadRuntimeError = false;
     public static void main(String[] args) throws IOException{

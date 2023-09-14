@@ -6,7 +6,7 @@
 
 package silklang.Interpreter;
 
-import silklang.App.silk;
+import silklang.App.Silk;
 import silklang.Error.RuntimeError;
 import silklang.Expressions.base.Expr;
 import silklang.Expressions.base.Visitor;
@@ -21,7 +21,7 @@ public class Interpreter implements Visitor<Object> {
             Object value = evaluate(expression);
             System.out.println(stringify(value));
         }catch (RuntimeError error){
-            silk.runtimeError(error);
+            Silk.runtimeError(error);
         }
 
     }
