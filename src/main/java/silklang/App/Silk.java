@@ -7,16 +7,13 @@
 
 //bom dia
 package silklang.App;
-
 import silklang.Error.RuntimeError;
-import silklang.ParserRepresentation.Expressions.base.Expr;
 import silklang.Interpreter.Interpreter;
 import silklang.Lexer.SilkLexer;
 import silklang.Lexer.Token;
 import silklang.Lexer.TokenType;
 import silklang.Parser.SilkParser;
 import silklang.ParserRepresentation.Statement.base.Stmt;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -25,8 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-public class Silk {
-
+public class Silk{
     private static final Interpreter interpreter = new Interpreter();
     static boolean haderror = false;
     static boolean hadRuntimeError = false;
