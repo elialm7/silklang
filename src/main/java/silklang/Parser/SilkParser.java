@@ -12,6 +12,7 @@ import silklang.ParserRepresentation.Expressions.representations.*;
 import silklang.App.Silk;
 import silklang.Lexer.Token;
 import silklang.Lexer.TokenType;
+import silklang.ParserRepresentation.Statement.Representation.Block;
 import silklang.ParserRepresentation.Statement.Representation.Expression;
 import silklang.ParserRepresentation.Statement.Representation.Print;
 import silklang.ParserRepresentation.Statement.Representation.Var;
@@ -68,8 +69,9 @@ public class SilkParser {
 
         if(match(PRINT)) return printStatement();
 
-        return expressionStatement();
+        if(match(LEFT_BRACE)) return new Block(block());
 
+        return expressionStatement();
 
     }
 
@@ -83,6 +85,18 @@ public class SilkParser {
         Expr expression = expression();
         consume(SEMICOLON, "se esperaba ';' despues de la expresion.");
         return new Expression(expression);
+    }
+
+    private List<Stmt> block(){
+
+        List<Stmt> statements = new ArrayList<>();
+
+        while(!check(RIGHT_BRACE) && !isAtEnd()){
+            statements.add(declaration());
+        }
+        consume(RIGHT_BRACE, "Se esperaba '}' despues de un bloque");
+        return statements;
+
     }
 
     private Expr expression(){
