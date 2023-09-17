@@ -7,6 +7,7 @@
 package silklang.Interpreter;
 
 import silklang.App.Silk;
+import silklang.Environment.Environment;
 import silklang.Error.RuntimeError;
 import silklang.ParserRepresentation.Expressions.base.Expr;
 import silklang.ParserRepresentation.Expressions.base.ExprVisitor;
@@ -14,6 +15,7 @@ import silklang.Lexer.Token;
 import silklang.ParserRepresentation.Expressions.representations.*;
 import silklang.ParserRepresentation.Statement.Representation.Expression;
 import silklang.ParserRepresentation.Statement.Representation.Print;
+import silklang.ParserRepresentation.Statement.Representation.Var;
 import silklang.ParserRepresentation.Statement.base.Stmt;
 import silklang.ParserRepresentation.Statement.base.StmtVisitor;
 
@@ -21,6 +23,12 @@ import java.util.List;
 
 
 public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
+
+    private Environment env;
+
+    public Interpreter(){
+        this.env = new Environment();
+    }
 
     @Deprecated
     public void interpret(Expr expression){
@@ -81,7 +89,7 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
 
     private void checkNumberOperands(Token operator, Object left, Object right){
         if(left instanceof Double && right instanceof Double)return;
-        throw new RuntimeError(operator, "Los operandos tienen que ser un numeros. ");
+        throw new RuntimeError(operator, "Los operandos tienen que ser numeros. ");
 
     }
     private void divisionbyZero(Token operator, Object left, Object right){
@@ -92,7 +100,11 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
 
     @Override
     public Object visitAssignExpr(Assign expr) {
-        return null;
+
+        Object value = evaluate(expr.getValue());
+        env.assign(expr.getName(), value);
+
+        return value;
     }
 
     @Override
@@ -195,9 +207,7 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
 
     @Override
     public Object visitVariableExpr(Variable expr) {
-
-
-        return null;
+        return env.get(expr.getName());
     }
 
     @Override
@@ -210,6 +220,16 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
     public Void visitPrintStmt(Print pr) {
         Object value = evaluate(pr.getExpr());
         System.out.println(stringify(value));
+        return null;
+    }
+
+    @Override
+    public Void visitVarStmt(Var vr) {
+        Object value = null;
+        if(vr.getExpression()!= null){
+            value = evaluate(vr.getExpression());
+        }
+        env.define(vr.getName().getLexeme(), value);
         return null;
     }
 }
