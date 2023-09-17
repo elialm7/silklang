@@ -8,15 +8,13 @@ package silklang.Parser;
 
 import silklang.Error.ParseError;
 import silklang.ParserRepresentation.Expressions.base.Expr;
-import silklang.ParserRepresentation.Expressions.representations.Binary;
-import silklang.ParserRepresentation.Expressions.representations.Grouping;
-import silklang.ParserRepresentation.Expressions.representations.Literal;
-import silklang.ParserRepresentation.Expressions.representations.Unary;
+import silklang.ParserRepresentation.Expressions.representations.*;
 import silklang.App.Silk;
 import silklang.Lexer.Token;
 import silklang.Lexer.TokenType;
 import silklang.ParserRepresentation.Statement.Representation.Expression;
 import silklang.ParserRepresentation.Statement.Representation.Print;
+import silklang.ParserRepresentation.Statement.Representation.Var;
 import silklang.ParserRepresentation.Statement.base.Stmt;
 
 import java.util.ArrayList;
@@ -33,25 +31,37 @@ public class SilkParser {
         this.tokens = tokens;
 
     }
-    @Deprecated
-    public Expr parse(){
+    public List<Stmt>  parse(){
+        List<Stmt> statements = new ArrayList<>();
+        while(!isAtEnd()){
+            statements.add(declaration());
+        }
+        return statements;
+    }
+    private Stmt declaration(){
         try{
-            return expression();
+            if(match(VAR)){
+                return varDeclaration();
+            }
+            return statement();
+
         }catch (ParseError error){
+            synchronize();
             return null;
         }
     }
 
-    public List<Stmt> parseTokens(){
-        try {
-            List<Stmt> statements = new ArrayList<>();
-            while (!isAtEnd()) {
-                statements.add(statement());
-            }
-            return statements;
-        }catch (ParseError error){
-            return null;
+    private Stmt varDeclaration(){
+
+        Token name = consume(IDENTIFIER, "Se esperaba el nombre de una variable. ");
+
+        Expr initializer = null;
+        if(match(EQUAL)){
+            initializer = expression();
         }
+        consume(SEMICOLON, "Se esperaba ';' despues de la declaracion de variable. ");
+        return new Var(name, initializer);
+
     }
 
     private Stmt statement(){
@@ -65,7 +75,7 @@ public class SilkParser {
 
     private Stmt printStatement(){
         Expr value = expression();
-        consume(SEMICOLON, " se esperaba ';' despues del valor.");
+        consume(SEMICOLON, "Se esperaba ';' despues del valor.");
         return new Print(value);
     }
 
@@ -76,7 +86,21 @@ public class SilkParser {
     }
 
     private Expr expression(){
-        return equality();
+        return assignment();
+    }
+
+    private Expr assignment(){
+        Expr expr = equality();
+        if(match(EQUAL)){
+            Token equals = previous();
+            Expr value = assignment();
+            if(expr instanceof Variable){
+                Token name = ((Variable)expr).getName();
+                return new Assign(name, value);
+            }
+            error(equals, "Objetivo de asignamiento invalido. ");
+        }
+        return expr;
     }
 
     private Expr equality(){
@@ -141,6 +165,9 @@ public class SilkParser {
         if(match(NIL)) return new Literal(null);
         if(match(NUMBER, STRING)){
             return new Literal(previous().getLiteral());
+        }
+        if(match(IDENTIFIER)){
+            return new Variable(previous());
         }
         if(match(LEFT_PAREN)){
             Expr expr = expression();
