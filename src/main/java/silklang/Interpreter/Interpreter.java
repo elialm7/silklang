@@ -13,6 +13,7 @@ import silklang.ParserRepresentation.Expressions.base.Expr;
 import silklang.ParserRepresentation.Expressions.base.ExprVisitor;
 import silklang.Lexer.Token;
 import silklang.ParserRepresentation.Expressions.representations.*;
+import silklang.ParserRepresentation.Statement.Representation.Block;
 import silklang.ParserRepresentation.Statement.Representation.Expression;
 import silklang.ParserRepresentation.Statement.Representation.Print;
 import silklang.ParserRepresentation.Statement.Representation.Var;
@@ -30,16 +31,6 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
         this.env = new Environment();
     }
 
-    @Deprecated
-    public void interpret(Expr expression){
-        try{
-            Object value = evaluate(expression);
-            System.out.println(stringify(value));
-        }catch (RuntimeError error){
-            Silk.runtimeError(error);
-        }
-    }
-
     public void interpret(List<Stmt> statements){
 
         try{
@@ -52,6 +43,17 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
     }
     private void execute(Stmt st){
         st.accept(this);
+    }
+    private void executeBlock(List<Stmt> stmts, Environment environment){
+        Environment previous = this.env;
+        try{
+            this.env = environment;
+            for(Stmt st : stmts){
+                execute(st);
+            }
+        }finally {
+            this.env = previous;
+        }
     }
 
     private String stringify(Object object) {
@@ -230,6 +232,12 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
             value = evaluate(vr.getExpression());
         }
         env.define(vr.getName().getLexeme(), value);
+        return null;
+    }
+
+    @Override
+    public Void visitBlockStmt(Block bl) {
+        executeBlock(bl.getStatements(), new Environment(env));
         return null;
     }
 }
