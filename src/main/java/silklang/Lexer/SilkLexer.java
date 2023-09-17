@@ -72,7 +72,7 @@ public class SilkLexer {
                 } else if (isAlpha(c)) {
                     identifier();
                 } else {
-                    Silk.error(line, "Unexpected character. ");
+                    Silk.error(line, "Caracter inesperado.");
                 }
             }
         }
@@ -135,7 +135,7 @@ public class SilkLexer {
             advance();
         }
         if(isAtEnd()){
-            Silk.error(line, "Unterminated String");
+            Silk.error(line, "String no terminado. ");
             return;
         }
         advance();
