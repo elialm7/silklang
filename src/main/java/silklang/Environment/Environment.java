@@ -12,14 +12,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Environment {
-    private final Map<String, Object> values;
-
+    private final Map<String, Object> values = new HashMap<>();
+    private final Environment enclosing;
     public Environment(){
-
-        this.values = new HashMap<>();
-
+        this.enclosing = null;
     }
-
+    public Environment(Environment enclosing){
+        this.enclosing = enclosing;
+    }
     public void define(String name, Object value){
         this.values.put(name, value);
     }
@@ -28,9 +28,10 @@ public class Environment {
         if(values.containsKey(name.getLexeme())){
             return values.get(name.getLexeme());
         }
-
+        if(enclosing!=null){
+            return enclosing.get(name);
+        }
         throw new RuntimeError(name, "La variable '"+name.getLexeme()+"' no esta definida");
-
     }
 
 
@@ -38,6 +39,10 @@ public class Environment {
 
         if(values.containsKey(name.getLexeme())){
             values.put(name.getLexeme(), value);
+            return;
+        }
+        if(enclosing!=null){
+            enclosing.assign(name, value);
             return;
         }
 
