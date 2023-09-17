@@ -2,6 +2,7 @@
 // we are going to use the recursive descent method, which is a top-down parser.
 
 program → statement* EOF ;
+declaration → varDecl | statement ;
 statement → exprStmt | printStmt ;
 exprStmt → expression ";" ;
 printStmt → "print" expression ";" ;
