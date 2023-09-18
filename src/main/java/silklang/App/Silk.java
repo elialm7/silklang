@@ -48,11 +48,9 @@ public class Silk{
     private static void runPromt() throws IOException{
         InputStreamReader input = new InputStreamReader(System.in);
         BufferedReader reader = new BufferedReader(input);
-        System.out.println("Bienvenido a SilkLang-interpreter version Alpha. [No ANTLR]");
+        System.out.println("SilkLang-Interpreter V1.0.0");
         System.out.println("Para salir escriba 'exit'");
-        System.out.println("Developer: R. Elias Ojeda Almada.");
-        System.out.println("Colaborador: Derlis diaz. ");
-        System.out.println("Copyright (c) under GPL V3. ");
+        System.out.println("Copyright (c) under GPL V3.");
         String line = "";
         do{
             System.out.print(">> ");
