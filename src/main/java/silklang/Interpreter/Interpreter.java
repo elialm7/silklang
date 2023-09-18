@@ -9,14 +9,12 @@ package silklang.Interpreter;
 import silklang.App.Silk;
 import silklang.Environment.Environment;
 import silklang.Error.RuntimeError;
+import silklang.Lexer.Token;
+import silklang.Lexer.TokenType;
 import silklang.ParserRepresentation.Expressions.base.Expr;
 import silklang.ParserRepresentation.Expressions.base.ExprVisitor;
-import silklang.Lexer.Token;
 import silklang.ParserRepresentation.Expressions.representations.*;
-import silklang.ParserRepresentation.Statement.Representation.Block;
-import silklang.ParserRepresentation.Statement.Representation.Expression;
-import silklang.ParserRepresentation.Statement.Representation.Print;
-import silklang.ParserRepresentation.Statement.Representation.Var;
+import silklang.ParserRepresentation.Statement.Representation.*;
 import silklang.ParserRepresentation.Statement.base.Stmt;
 import silklang.ParserRepresentation.Statement.base.StmtVisitor;
 
@@ -187,7 +185,20 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
 
     @Override
     public Object visitLogicalExpr(Logical expr) {
-        return null;
+
+        Object left = evaluate(expr.getLeft());
+
+        if(expr.getOperator().getType() == TokenType.OR){
+            if(isTruthy(left)){
+                return left;
+            }
+        }else{
+            if(!isTruthy(left)){
+                return left;
+            }
+        }
+
+        return evaluate(expr.getRight());
     }
 
     @Override
@@ -261,6 +272,16 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
     @Override
     public Void visitBlockStmt(Block bl) {
         executeBlock(bl.getStatements(), new Environment(env));
+        return null;
+    }
+
+    @Override
+    public Void visitIfStmt(IF ifstmt) {
+        if(isTruthy(evaluate(ifstmt.getCondition()))){
+            execute(ifstmt.getThenBranch());
+        }else if(ifstmt.getElseBranch() != null){
+            execute(ifstmt.getElseBranch());
+        }
         return null;
     }
 }
