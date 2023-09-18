@@ -21,6 +21,7 @@ import silklang.ParserRepresentation.Statement.base.Stmt;
 import silklang.ParserRepresentation.Statement.base.StmtVisitor;
 
 import java.util.List;
+import java.util.Scanner;
 
 
 public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
@@ -66,6 +67,14 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
             return text;
         }
         return object.toString();
+    }
+
+    private Object parseDouble(String input){
+        try{
+            return Double.parseDouble(input);
+        }catch (NumberFormatException exception){
+            return input;
+        }
     }
 
     private Object evaluate(Expr expr){
@@ -136,6 +145,9 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
             case STAR:
                 checkNumberOperands(expr.getOperator(), left, right);
                 return (double)left * (double) right;
+            case MOD:
+                checkNumberOperands(expr.getOperator(), left, right);
+                return (double)left % (double)right;
             case PLUS:
                 if(left instanceof  Double && right instanceof Double){
                     return (double)left+(double)right;
@@ -210,6 +222,17 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
     @Override
     public Object visitVariableExpr(Variable expr) {
         return env.get(expr.getName());
+    }
+
+    @Override
+    public Object visitInputExpr(Input in) {
+        if(in != null){
+            Scanner sc = new Scanner(System.in);
+            String input = sc.nextLine();
+            return parseDouble(input);
+        }
+
+        return null;
     }
 
     @Override
