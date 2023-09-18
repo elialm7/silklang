@@ -68,7 +68,6 @@ public class SilkParser {
     private Stmt statement(){
 
         if(match(PRINT)) return printStatement();
-
         if(match(LEFT_BRACE)) return new Block(block());
 
         return expressionStatement();
@@ -156,7 +155,7 @@ public class SilkParser {
 
     private Expr factor(){
       Expr expr = unary();
-      while(match(SLASH, STAR)){
+      while(match(SLASH, STAR, MOD)){
           Token operator = previous();
           Expr right = unary();
           expr = new Binary(expr, operator, right);
@@ -187,6 +186,9 @@ public class SilkParser {
             Expr expr = expression();
             consume(RIGHT_PAREN, "Se espera una  ')' despues de una expresion. ");
             return new Grouping(expr);
+        }
+        if(match(INPUT)){
+            return new Input();
         }
        throw error(peek(), "Se esperaba una expresion. ");
     }
