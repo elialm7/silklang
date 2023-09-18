@@ -34,5 +34,6 @@ public class KeyWords {
         keywords.put("true", TRUE);
         keywords.put("var", VAR);
         keywords.put("while", WHILE);
+        keywords.put("__input", INPUT);
     }
 }
