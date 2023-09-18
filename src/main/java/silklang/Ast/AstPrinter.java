@@ -82,4 +82,9 @@ public class AstPrinter implements ExprVisitor<String> {
     public String visitVariableExpr(Variable expr) {
         return null;
     }
+
+    @Override
+    public String visitInputExpr(Input in) {
+        return null;
+    }
 }
