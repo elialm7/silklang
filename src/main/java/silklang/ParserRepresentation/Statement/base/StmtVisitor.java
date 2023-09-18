@@ -5,10 +5,7 @@
 
 package silklang.ParserRepresentation.Statement.base;
 
-import silklang.ParserRepresentation.Statement.Representation.Block;
-import silklang.ParserRepresentation.Statement.Representation.Expression;
-import silklang.ParserRepresentation.Statement.Representation.Print;
-import silklang.ParserRepresentation.Statement.Representation.Var;
+import silklang.ParserRepresentation.Statement.Representation.*;
 
 public interface StmtVisitor<T>{
 
@@ -17,5 +14,6 @@ public interface StmtVisitor<T>{
     T visitVarStmt(Var vr);
     T visitBlockStmt(Block bl);
 
+    T visitIfStmt(IF ifstmt);
 
 }
