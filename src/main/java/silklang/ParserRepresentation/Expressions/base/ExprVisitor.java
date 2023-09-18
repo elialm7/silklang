@@ -20,4 +20,5 @@ public interface ExprVisitor<T> {
     T visitThisExpr(This expr);
     T visitUnaryExpr(Unary expr);
     T visitVariableExpr(Variable expr);
+    T visitInputExpr(Input in);
 }
