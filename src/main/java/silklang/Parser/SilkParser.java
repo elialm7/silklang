@@ -6,16 +6,14 @@
 
 package silklang.Parser;
 
-import silklang.Error.ParseError;
-import silklang.ParserRepresentation.Expressions.base.Expr;
-import silklang.ParserRepresentation.Expressions.representations.*;
 import silklang.App.Silk;
+import silklang.Error.ParseError;
 import silklang.Lexer.Token;
 import silklang.Lexer.TokenType;
-import silklang.ParserRepresentation.Statement.Representation.Block;
-import silklang.ParserRepresentation.Statement.Representation.Expression;
-import silklang.ParserRepresentation.Statement.Representation.Print;
-import silklang.ParserRepresentation.Statement.Representation.Var;
+import silklang.ParserRepresentation.Expressions.base.Expr;
+import silklang.ParserRepresentation.Expressions.representations.*;
+import silklang.ParserRepresentation.Statement.Representation.*;
+import silklang.ParserRepresentation.Statement.Representation.IF;
 import silklang.ParserRepresentation.Statement.base.Stmt;
 
 import java.util.ArrayList;
@@ -67,10 +65,25 @@ public class SilkParser {
 
     private Stmt statement(){
 
+        if(match(IF)) return ifStatement();
         if(match(PRINT)) return printStatement();
         if(match(LEFT_BRACE)) return new Block(block());
 
         return expressionStatement();
+
+    }
+
+    private Stmt ifStatement(){
+        consume(LEFT_PAREN, "Se esperaba '(' despues de un 'if'. ");
+        Expr condition = expression();
+        consume(RIGHT_PAREN, "Se esperaba ')' despues una condicion. ");
+        Stmt thenBranch = statement();
+        Stmt elseBranch = null;
+        if(match(ELSE)){
+            elseBranch = statement();
+        }
+
+        return new IF(condition, thenBranch, elseBranch);
 
     }
 
@@ -103,7 +116,7 @@ public class SilkParser {
     }
 
     private Expr assignment(){
-        Expr expr = equality();
+        Expr expr = or();
         if(match(EQUAL)){
             Token equals = previous();
             Expr value = assignment();
@@ -116,6 +129,31 @@ public class SilkParser {
         return expr;
     }
 
+
+    private Expr or(){
+        Expr expr = and();
+
+        while(match(OR)){
+            Token operator = previous();
+            Expr right = and();
+            expr = new Logical(expr, operator, right);
+        }
+
+        return expr;
+    }
+
+    private Expr and(){
+
+        Expr expr = equality();
+        while(match(AND)){
+            Token operator = previous();
+            Expr right = equality();
+            expr = new Logical(expr, operator, right);
+        }
+
+        return expr;
+
+    }
     private Expr equality(){
 
         Expr expr = comparison();
