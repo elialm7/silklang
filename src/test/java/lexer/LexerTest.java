@@ -18,4 +18,16 @@ public class LexerTest {
         }
     }
 
+    @Test
+    public void testModOperatorToken(){
+
+        String test = "var modulo = 4%2";
+        System.out.println(test);
+        SilkLexer lexer = new SilkLexer(test);
+        List<Token> tokens = lexer.tokenize();
+        for(Token tk: tokens){
+            System.out.println(tk);
+        }
+    }
+
 }
