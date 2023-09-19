@@ -15,4 +15,6 @@ public interface StmtVisitor<T>{
     T visitBlockStmt(Block bl);
     T visitIfStmt(If ifstmt);
     T visitWhileStmt(While wh);
+    T visitBreakStmt(Break br);
+    T visitContinueStmt(Continue ct);
 }
