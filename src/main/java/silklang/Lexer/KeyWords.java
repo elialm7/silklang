@@ -35,5 +35,7 @@ public class KeyWords {
         keywords.put("var", VAR);
         keywords.put("while", WHILE);
         keywords.put("__input", INPUT);
+        keywords.put("break", BREAK);
+        keywords.put("continue", CONTINUE);
     }
 }
