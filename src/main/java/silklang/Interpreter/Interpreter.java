@@ -95,17 +95,17 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
 
     private void checkNumberOperand(Token operator, Object operand){
         if(operand instanceof Double)return;
-        throw new RuntimeError(operator, "El operando debe ser un numero. ");
+        throw new RuntimeError(operator, " El operando debe ser un numero. ");
     }
 
     private void checkNumberOperands(Token operator, Object left, Object right){
         if(left instanceof Double && right instanceof Double)return;
-        throw new RuntimeError(operator, "Los operandos tienen que ser numeros. ");
+        throw new RuntimeError(operator, " Los operandos tienen que ser numeros. ");
 
     }
     private void divisionbyZero(Token operator, Object left, Object right){
         if((double)right!=0)return;
-        throw new RuntimeError(operator, "La division por cero no esta permitida.");
+        throw new RuntimeError(operator, " La division por cero no esta permitida.");
     }
 
 

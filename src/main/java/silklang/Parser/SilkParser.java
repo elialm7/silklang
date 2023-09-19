@@ -153,7 +153,7 @@ public class SilkParser {
 
     private Stmt expressionStatement(){
         Expr expression = expression();
-        consume(SEMICOLON, "se esperaba ';' despues de la expresion.");
+        consume(SEMICOLON, "Se esperaba ';' despues de la expresion.");
         return new Expression(expression);
     }
 
@@ -280,13 +280,13 @@ public class SilkParser {
         }
         if(match(LEFT_PAREN)){
             Expr expr = expression();
-            consume(RIGHT_PAREN, "Se espera una  ')' despues de una expresion. ");
+            consume(RIGHT_PAREN, " Se espera una  ')' despues de una expresion. ");
             return new Grouping(expr);
         }
         if(match(INPUT)){
             return new Input();
         }
-       throw error(peek(), "Se esperaba una expresion. ");
+       throw error(peek(), " Se esperaba una expresion. ");
     }
 
     private Token consume(TokenType type, String message){

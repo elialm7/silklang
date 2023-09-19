@@ -7,6 +7,7 @@
 
 //bom dia
 package silklang.App;
+
 import silklang.Error.RuntimeError;
 import silklang.Interpreter.Interpreter;
 import silklang.Lexer.SilkLexer;
@@ -14,6 +15,7 @@ import silklang.Lexer.Token;
 import silklang.Lexer.TokenType;
 import silklang.Parser.SilkParser;
 import silklang.ParserRepresentation.Statement.base.Stmt;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -81,7 +83,7 @@ public class Silk{
         if(token.getType()== TokenType.EOF){
             report(token.getLine(), " al final ", message);
         }else{
-            report(token.getLine(), "en  '"+token.getLexeme() +"'", message );
+            report(token.getLine(), " en  '"+token.getLexeme() +"'", message );
         }
     }
     private static void report(int line, String where, String message){
