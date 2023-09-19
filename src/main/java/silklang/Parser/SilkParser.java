@@ -70,9 +70,21 @@ public class SilkParser {
         if(match(WHILE)) return whileStatement();
         if(match(FOR)) return forStatement();
         if(match(LEFT_BRACE)) return new Block(block());
-
+        if (match(CONTINUE)) return  continueStatement();
+        if(match(BREAK)) return  breakStatement();
         return expressionStatement();
 
+    }
+
+    private Stmt continueStatement(){
+        Token keyword = previous();
+        consume(SEMICOLON, "Se espera un ';' despues de un continue. ");
+        return new Continue(keyword);
+    }
+    private Stmt breakStatement(){
+        Token keyword = previous();
+        consume(SEMICOLON, "Se espera un ';' despues de un break. ");
+        return new Break(keyword);
     }
 
     private Stmt forStatement(){
