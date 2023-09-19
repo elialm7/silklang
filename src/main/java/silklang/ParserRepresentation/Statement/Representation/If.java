@@ -9,13 +9,13 @@ import silklang.ParserRepresentation.Expressions.base.Expr;
 import silklang.ParserRepresentation.Statement.base.Stmt;
 import silklang.ParserRepresentation.Statement.base.StmtVisitor;
 
-public class IF extends Stmt {
+public class If extends Stmt {
 
     private Expr condition;
     private Stmt thenBranch;
     private Stmt elseBranch;
 
-    public IF(Expr condition, Stmt thenBranch, Stmt elseBranch) {
+    public If(Expr condition, Stmt thenBranch, Stmt elseBranch) {
         this.condition = condition;
         this.thenBranch = thenBranch;
         this.elseBranch = elseBranch;
