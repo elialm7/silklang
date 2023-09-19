@@ -13,10 +13,10 @@ import silklang.Lexer.TokenType;
 import silklang.ParserRepresentation.Expressions.base.Expr;
 import silklang.ParserRepresentation.Expressions.representations.*;
 import silklang.ParserRepresentation.Statement.Representation.*;
-import silklang.ParserRepresentation.Statement.Representation.IF;
 import silklang.ParserRepresentation.Statement.base.Stmt;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static silklang.Lexer.TokenType.*;
@@ -67,11 +67,57 @@ public class SilkParser {
 
         if(match(IF)) return ifStatement();
         if(match(PRINT)) return printStatement();
+        if(match(WHILE)) return whileStatement();
+        if(match(FOR)) return forStatement();
         if(match(LEFT_BRACE)) return new Block(block());
 
         return expressionStatement();
 
     }
+
+    private Stmt forStatement(){
+
+    	 consume(LEFT_PAREN, "Se espera '(' despues de un 'for' ");
+		 Stmt initializer;
+		 if (match(SEMICOLON)) {
+			  initializer = null;
+		 } else if (match(VAR)) {
+			  initializer = varDeclaration();
+		 } else {
+			  initializer = expressionStatement();
+		 }
+		 Expr increment = null;
+		 if (!check(RIGHT_PAREN)) {
+			  increment = expression();
+		 }
+		 consume(RIGHT_PAREN, "Se espera ')' despues de las clausulas. ");
+		 Stmt body = statement();
+		 Expr condition = null;
+		 if (!check(SEMICOLON)) {
+			  condition = expression();
+		 }
+		 consume(SEMICOLON, "Se espera ';' despues de la condicion. ");
+		 if (increment != null) {
+			  body = new Block(Arrays.asList(body,new Expression(increment)));
+		 }
+		 if (condition == null) condition = new Literal(true);
+		 body = new While(condition, body);
+		 if (initializer != null) {
+			  body = new Block(Arrays.asList(initializer, body));
+		 }
+
+		 return body;
+
+
+	}
+
+    private Stmt whileStatement(){
+    	 consume(LEFT_PAREN, "Se espera '(' despues de un while.");
+    	 Expr condition = expression();
+    	 consume (RIGHT_PAREN, "Se espera ')' despues de una expresion en un while. ");
+    	 Stmt body = statement();
+    	 return new While(condition, body);
+	}
 
     private Stmt ifStatement(){
         consume(LEFT_PAREN, "Se esperaba '(' despues de un 'if'. ");
@@ -83,7 +129,7 @@ public class SilkParser {
             elseBranch = statement();
         }
 
-        return new IF(condition, thenBranch, elseBranch);
+        return new If(condition, thenBranch, elseBranch);
 
     }
 

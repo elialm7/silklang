@@ -276,7 +276,7 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
     }
 
     @Override
-    public Void visitIfStmt(IF ifstmt) {
+    public Void visitIfStmt(If ifstmt) {
         if(isTruthy(evaluate(ifstmt.getCondition()))){
             execute(ifstmt.getThenBranch());
         }else if(ifstmt.getElseBranch() != null){
@@ -284,4 +284,12 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
         }
         return null;
     }
+
+	 @Override
+	 public Void visitWhileStmt(While wh) {
+    	 while(isTruthy(wh.getCondition())){
+    	 	 execute(wh.getBody());
+		 }
+		  return null;
+	 }
 }
