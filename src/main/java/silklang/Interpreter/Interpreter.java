@@ -8,6 +8,8 @@ package silklang.Interpreter;
 
 import silklang.App.Silk;
 import silklang.Environment.Environment;
+import silklang.Error.JumpError;
+import silklang.Error.JumpType;
 import silklang.Error.RuntimeError;
 import silklang.Lexer.Token;
 import silklang.Lexer.TokenType;
@@ -287,9 +289,25 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
 
 	 @Override
 	 public Void visitWhileStmt(While wh) {
-    	 while(isTruthy(wh.getCondition())){
-    	 	 execute(wh.getBody());
+    	 while(isTruthy(evaluate(wh.getCondition()))){
+    	 	 try {
+				  execute(wh.getBody());
+			 }catch (JumpError error){
+    	 	 	 if(error.getType() == JumpType.BREAK){
+    	 	 	 	 break;
+				 }
+			 }
 		 }
 		  return null;
+	 }
+
+	 @Override
+	 public Void visitBreakStmt(Break br) {
+		  throw new JumpError(JumpType.BREAK);
+	 }
+
+	 @Override
+	 public Void visitContinueStmt(Continue ct) {
+		  throw new JumpError(JumpType.CONTINUE);
 	 }
 }
