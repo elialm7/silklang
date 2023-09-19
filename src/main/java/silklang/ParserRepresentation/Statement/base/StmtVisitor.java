@@ -13,7 +13,6 @@ public interface StmtVisitor<T>{
     T visitPrintStmt(Print pr);
     T visitVarStmt(Var vr);
     T visitBlockStmt(Block bl);
-
-    T visitIfStmt(IF ifstmt);
-
+    T visitIfStmt(If ifstmt);
+    T visitWhileStmt(While wh);
 }
