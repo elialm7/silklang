@@ -4,7 +4,9 @@
 program → statement* EOF ;
 declaration → varDecl | statement ;
 varDecl → "var" IDENTIFIER ( "=" expression )? ";" ;
-statement → exprStmt | printStmt  | block | ifStmt | whileStmt | forStmt;
+statement → exprStmt | printStmt  | block | ifStmt | whileStmt | forStmt | breakStmt | continueStmt;
+breakStmt-> "break" ;
+continueStmt -> "continue" ;
 ifStm -> "if" "(" expression ")" statement ("else" statement)? ;
 whileStmt -> "while" "(" expression ")" statement;
 forStmt -> "for" "(" ( varDecl | exprStmt | ";" ) expression? ";" expression? ")" statement ;
