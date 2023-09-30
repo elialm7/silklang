@@ -6,7 +6,7 @@
 
     <groupId>org</groupId>
     <artifactId>silklang</artifactId>
-    <version>v1.0</version> <!--Using the Major.Minor-->
+    <version>final</version>
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
@@ -36,7 +36,7 @@
                 </executions>
             </plugin>
         </plugins>
-        <finalName>silkint-${project.version}</finalName>
+        <finalName>silki</finalName>
     </build>
     <dependencies>
         <dependency>
