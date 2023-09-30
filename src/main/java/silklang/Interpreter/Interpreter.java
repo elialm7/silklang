@@ -7,29 +7,58 @@
 package silklang.Interpreter;
 
 import silklang.App.Silk;
+import silklang.Callable.SilkCallable;
+import silklang.Callable.SilkFunction;
 import silklang.Environment.Environment;
 import silklang.Error.JumpError;
 import silklang.Error.JumpType;
+import silklang.Error.ReturnException;
 import silklang.Error.RuntimeError;
 import silklang.Lexer.Token;
 import silklang.Lexer.TokenType;
+import silklang.Native.ClockNativeFN;
 import silklang.ParserRepresentation.Expressions.base.Expr;
 import silklang.ParserRepresentation.Expressions.base.ExprVisitor;
+import silklang.ParserRepresentation.Expressions.representations.Set;
 import silklang.ParserRepresentation.Expressions.representations.*;
 import silklang.ParserRepresentation.Statement.Representation.*;
 import silklang.ParserRepresentation.Statement.base.Stmt;
 import silklang.ParserRepresentation.Statement.base.StmtVisitor;
 
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 
 public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
 
     private Environment env;
+    private Environment globals;
 
+    private Map<Expr, Integer> locals = new HashMap<>();
     public Interpreter(){
-        this.env = new Environment();
+        this.globals = new Environment();
+        this.env = globals;
+        defineNativeFunctions();
+    }
+    private void defineNativeFunctions(){
+        this.globals.define("Clock", new ClockNativeFN());
+    }
+    public Environment getGlobals(){
+        return this.globals;
+    }
+
+
+    private Object lookUpVariable(Token name, Expr expr){
+        Integer distance = locals.get(expr);
+        if(distance != null){
+            return env.getAt(distance, name.getLexeme());
+        }else{
+            return globals.get(name);
+        }
+    }
+
+
+    public void resolve(Expr expr, int size){
+        locals.put(expr, size);
     }
 
     public void interpret(List<Stmt> statements){
@@ -45,7 +74,7 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
     private void execute(Stmt st){
         st.accept(this);
     }
-    private void executeBlock(List<Stmt> stmts, Environment environment){
+    public void executeBlock(List<Stmt> stmts, Environment environment){
         Environment previous = this.env;
         try{
             this.env = environment;
@@ -56,6 +85,7 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
             this.env = previous;
         }
     }
+
 
     private String stringify(Object object) {
         if (object == null) return "nil";
@@ -113,7 +143,12 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
     public Object visitAssignExpr(Assign expr) {
 
         Object value = evaluate(expr.getValue());
-        env.assign(expr.getName(), value);
+        Integer distance = locals.get(expr);
+        if(distance != null){
+            env.assignAt(distance, expr.getName(), value);
+        }else{
+            globals.assign(expr.getName(), value);
+        }
 
         return value;
     }
@@ -167,7 +202,22 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
 
     @Override
     public Object visitCallExpr(Call expr) {
-        return null;
+
+        Object callee = evaluate(expr.getCallee());
+        List<Object> arguments = new ArrayList<>();
+        for(Expr argument: expr.getArguments()){
+            arguments.add(evaluate(argument));
+        }
+        SilkCallable function = (SilkCallable) callee;
+        if(arguments.size() != function.arity()){
+            throw new RuntimeError(expr.getParen(), "Se esperaba " +
+                    function.arity() + " de argumentos pero se tuvo" +
+                    arguments.size() + ".");
+        }
+        if(!(callee instanceof SilkCallable)){
+            throw new RuntimeError(expr.getParen(), "Solo se pueden llamar funciones y clases. ");
+        }
+        return function.call(this,arguments);
     }
 
     @Override
@@ -234,7 +284,7 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
 
     @Override
     public Object visitVariableExpr(Variable expr) {
-        return env.get(expr.getName());
+        return lookUpVariable(expr.getName(), expr);
     }
 
     @Override
@@ -310,4 +360,18 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
 	 public Void visitContinueStmt(Continue ct) {
 		  throw new JumpError(JumpType.CONTINUE);
 	 }
+
+    @Override
+    public Void visitFunctionStmt(Function ft) {
+        SilkFunction function = new SilkFunction(ft, env);
+        env.define(ft.getName().getLexeme(), function);
+        return null;
+    }
+
+    @Override
+    public Void visitReturnStmt(Return rt) {
+        Object value = null;
+        if(rt.getValue() != null) value = evaluate(rt.getValue());
+        throw new ReturnException(value);
+    }
 }
