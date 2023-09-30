@@ -10,6 +10,7 @@ public class JumpError extends RuntimeException {
 	 private JumpType type;
 
 	 public JumpError(JumpType type) {
+		  super(null, null, false, false);
 		  this.type = type;
 	 }
 
