@@ -10,7 +10,7 @@ import silklang.ParserRepresentation.Statement.base.Stmt;
 import silklang.ParserRepresentation.Statement.base.StmtVisitor;
 
 public class Expression extends Stmt {
-    public final Expr expr;
+    private  final Expr expr;
 
     public Expression(Expr expr){
         this.expr = expr;
