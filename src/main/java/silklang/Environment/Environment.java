@@ -35,6 +35,19 @@ public class Environment {
     }
 
 
+    private Environment ancestor(int distance){
+        Environment env = this;
+        for (int i = 0; i < distance; i++) {
+            env = env.enclosing;
+        }
+        return env;
+    }
+
+
+    public Object getAt(int distance, String name){
+        return ancestor(distance).values.get(name);
+    }
+
     public void assign(Token name, Object value) {
 
         if(values.containsKey(name.getLexeme())){
@@ -48,5 +61,9 @@ public class Environment {
 
         throw new RuntimeError(name, "La variable '"+name.getLexeme()+"' no esta definida");
 
+    }
+
+    public void assignAt(Integer distance, Token name, Object value) {
+        ancestor(distance).values.put(name.getLexeme(), value);
     }
 }
