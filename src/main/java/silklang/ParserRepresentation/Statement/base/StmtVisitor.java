@@ -17,4 +17,6 @@ public interface StmtVisitor<T>{
     T visitWhileStmt(While wh);
     T visitBreakStmt(Break br);
     T visitContinueStmt(Continue ct);
+    T visitFunctionStmt(Function ft);
+    T visitReturnStmt(Return rt);
 }
