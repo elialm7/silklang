@@ -2,9 +2,13 @@
 // we are going to use the recursive descent method, which is a top-down parser.
 
 program → statement* EOF ;
-declaration → varDecl | statement ;
+declaration → varDecl | statement | fundec;
+fundec-> "fun" function;
+function-> IDENTIFIER "(" parameters? ")" block;
+parameters -> IDENTIFIER ("," IDENTIFIER)*;
 varDecl → "var" IDENTIFIER ( "=" expression )? ";" ;
-statement → exprStmt | printStmt  | block | ifStmt | whileStmt | forStmt | breakStmt | continueStmt;
+statement → exprStmt | printStmt  | block | ifStmt | whileStmt | forStmt | breakStmt | continueStmt | returnStmt;
+returntStmt -> "return" expression?";";
 breakStmt-> "break" ;
 continueStmt -> "continue" ;
 ifStm -> "if" "(" expression ")" statement ("else" statement)? ;
@@ -22,7 +26,9 @@ equality → comparison ( ( "!=" | "==" ) comparison )* ;
 comparison → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
 term → factor ( ( "-" | "+" ) factor )* ;
 factor → unary ( ( "/" | "*" | "%") unary )* ;
-unary → ( "!" | "-" ) unary | primary  ;
+unary → ( "!" | "-" ) unary | call  ;
+call -> primary ( "(" arguments? ")")*;
+arguments -> expression ("," expression)*;
 primary → NUMBER | STRING | "true" | "false" | "nil" | "(" expression ")" | IDENTIFIER | "__input" ;
 
 NUMBER         → DIGIT+ ( "." DIGIT+ )? ;
