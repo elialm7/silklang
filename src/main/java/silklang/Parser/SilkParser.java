@@ -42,12 +42,33 @@ public class SilkParser {
             if(match(VAR)){
                 return varDeclaration();
             }
+            if(match(FUN)){
+                return function("function");
+            }
             return statement();
 
         }catch (ParseError error){
             synchronize();
             return null;
         }
+    }
+
+    private Stmt function(String kind){
+        Token name =  consume(IDENTIFIER, "Se esperaba el nombre de una "+kind);
+        consume(LEFT_PAREN, "Se esperaba '(' despues del  nombre de una " + kind);
+        List<Token> parameters = new ArrayList<>();
+        if (!check(RIGHT_PAREN)) {
+            do {
+                if (parameters.size() >= 100) {
+                    error(peek(), "No se puede tener mas de 100 parametros");
+                }
+                parameters.add(consume(IDENTIFIER, "Se esperaba el nombre de un parametro."));
+            } while (match(COMMA));
+        }
+        consume(RIGHT_PAREN, "Se esperaba  ')' despues de los parametros");
+        consume(LEFT_BRACE, "Se esperaba  '{' antes del cuerpo de "+kind);
+        List<Stmt> body = block();
+        return new Function(name, parameters, body);
     }
 
     private Stmt varDeclaration(){
@@ -72,8 +93,20 @@ public class SilkParser {
         if(match(LEFT_BRACE)) return new Block(block());
         if (match(CONTINUE)) return  continueStatement();
         if(match(BREAK)) return  breakStatement();
+        if(match(RETURN)) return returnStatement();
         return expressionStatement();
 
+    }
+
+    private Stmt returnStatement(){
+
+        Token keyword = previous();
+        Expr value = null;
+        if(!check(SEMICOLON)){
+            value = expression();
+        }
+        consume(SEMICOLON, "Se esperaba ';' despues de un return");
+        return new Return(keyword, value);
     }
 
     private Stmt continueStatement(){
@@ -265,9 +298,34 @@ public class SilkParser {
             Expr right = unary();
             return new Unary(operator, right);
         }
-        return primary();
+        return call();
     }
 
+    private Expr call(){
+        Expr expr = primary();
+        while(true){
+            if(match(LEFT_PAREN)){
+                expr = finishcall(expr);
+            }else{
+                break;
+            }
+        }
+        return expr;
+    }
+
+    private Expr finishcall(Expr callee){
+        List<Expr> arguments = new ArrayList<>();
+        if(!check(RIGHT_PAREN)){
+            do{
+                if(arguments.size() >= 100){
+                    error(peek(), "No se puede tener mas de 100 argumentos. ");
+                }
+                arguments.add(expression());
+            }while(match(COMMA));
+        }
+        Token paren = consume(RIGHT_PAREN, " Se esperaba ')' despues de los argumentos. ");
+        return new Call(callee, paren, arguments);
+    }
     private Expr primary(){
         if(match(FALSE)) return new Literal(false);
         if(match(TRUE)) return new Literal(true);
