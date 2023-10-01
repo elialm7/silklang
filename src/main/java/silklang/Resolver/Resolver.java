@@ -22,6 +22,8 @@ import java.util.Stack;
 
 public class Resolver  implements ExprVisitor<Void>, StmtVisitor<Void> {
 
+
+    private ClassType currentClass = ClassType.NONE;
     private Interpreter interpreter;
     private Stack<Map<String, Boolean>> scopes = new Stack<>();
 
@@ -110,6 +112,7 @@ public class Resolver  implements ExprVisitor<Void>, StmtVisitor<Void> {
 
     @Override
     public Void visitGetExpr(Get expr) {
+        resolve(expr.getObject());
         return null;
     }
 
@@ -134,16 +137,30 @@ public class Resolver  implements ExprVisitor<Void>, StmtVisitor<Void> {
 
     @Override
     public Void visitSetExpr(Set expr) {
+
+        resolve(expr.getValue());
+        resolve(expr.getObject());
         return null;
     }
 
     @Override
     public Void visitSuperExpr(Super expr) {
+        if(currentClass == ClassType.NONE){
+            Silk.error(expr.getKeyword(), " 'super' no puede ser usado afuera de una clase.");
+        }else if(currentClass != ClassType.SUBCLASS){
+            Silk.error(expr.getKeyword(), " 'super' no puede ser usado dentro de una clase sin superclase.");
+        }
+        resolveLocal(expr, expr.getKeyword());
         return null;
     }
 
     @Override
     public Void visitThisExpr(This expr) {
+        if(currentClass == ClassType.NONE){
+            Silk.error(expr.getKeyword(), "No se puede usar 'this' fuera de una clase. ");
+            return null;
+        }
+        resolveLocal(expr, expr.getKeyword());
         return null;
     }
 
@@ -243,10 +260,46 @@ public class Resolver  implements ExprVisitor<Void>, StmtVisitor<Void> {
         if(currentFunction == FunctionType.NONE){
             Silk.error(rt.getKeyword(), "No se puede retornar de codigo Top-Level.");
         }
-
         if(rt.getValue() != null){
+            if(currentFunction == FunctionType.INITIALIZER){
+                Silk.error(rt.getKeyword(), "No se puede retornar un valor desde un constructor. ");
+            }
             resolve(rt.getValue());
         }
+        return null;
+    }
+
+    @Override
+    public Void visitClassStmt(SClass cl) {
+        ClassType enclosingclass = currentClass;
+        currentClass = ClassType.CLASS;
+        declare(cl.getName());
+        define(cl.getName());
+        if(cl.getSuperclass() != null && cl.getName().getLexeme().equals(cl.getSuperclass().getName().getLexeme())){
+            Silk.error(cl.getSuperclass().getName(), "Una clase no puede heredarse a si mismo. ");
+        }
+        if(cl.getSuperclass() != null){
+            currentClass = ClassType.SUBCLASS;
+            resolve(cl.getSuperclass());
+        }
+        if(cl.getSuperclass() != null){
+            beginScope();
+            scopes.peek().put("super", true);
+        }
+        beginScope();
+        scopes.peek().put("this", true);
+        for(Function method: cl.getFunctions()){
+            FunctionType type = FunctionType.METHOD;
+            if(method.getName().getLexeme().equals("init")){
+                type = FunctionType.INITIALIZER;
+            }
+            resolveFunction(method, type);
+        }
+        endScope();
+        if(cl.getSuperclass() != null){
+            endScope();
+        }
+        currentClass = enclosingclass;
         return null;
     }
 }
