@@ -2,7 +2,8 @@
 // we are going to use the recursive descent method, which is a top-down parser.
 
 program → statement* EOF ;
-declaration → varDecl | statement | fundec;
+declaration → varDecl | statement | fundec | classdec;
+classdec -> "class" IDENTIFIER ("<" IDENTIFIER)? "{" function* "}";
 fundec-> "fun" function;
 function-> IDENTIFIER "(" parameters? ")" block;
 parameters -> IDENTIFIER ("," IDENTIFIER)*;
@@ -19,7 +20,7 @@ exprStmt → expression ";" ;
 printStmt → "print" expression ";" ;
 
 expression → assignment ;
-assignment → IDENTIFIER "=" assignment | logic_or ;
+assignment → (call "." )? IDENTIFIER "=" assignment | logic_or ;
 logic_or -> logic_and ( "or" logic_and )*;
 logic_and -> equality ("and" equality)*;
 equality → comparison ( ( "!=" | "==" ) comparison )* ;
@@ -27,9 +28,9 @@ comparison → term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
 term → factor ( ( "-" | "+" ) factor )* ;
 factor → unary ( ( "/" | "*" | "%") unary )* ;
 unary → ( "!" | "-" ) unary | call  ;
-call -> primary ( "(" arguments? ")")*;
+call -> primary ( "(" arguments? ")" | "." IDENTIFIER)*;
 arguments -> expression ("," expression)*;
-primary → NUMBER | STRING | "true" | "false" | "nil" | "(" expression ")" | IDENTIFIER | "__input" ;
+primary → NUMBER | STRING | "true" | "false" | "nil" | "(" expression ")" | IDENTIFIER | "__input" | "this" | "suepr" "." IDENTIFIER;
 
 NUMBER         → DIGIT+ ( "." DIGIT+ )? ;
 STRING         → "\"" <any char except "\"">* "\"" ;
