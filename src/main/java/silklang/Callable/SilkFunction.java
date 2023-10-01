@@ -14,11 +14,12 @@ import java.util.List;
 
 public class SilkFunction implements SilkCallable{
     private Function declaration;
-
+    private boolean isInitializer;
     private final Environment closure;
-    public SilkFunction(Function declaration, Environment closure) {
+    public SilkFunction(Function declaration, Environment closure, boolean isInitializer) {
         this.declaration = declaration;
         this.closure = closure;
+        this.isInitializer = isInitializer;
     }
 
     @Override
@@ -35,9 +36,20 @@ public class SilkFunction implements SilkCallable{
         try {
             interpreter.executeBlock(declaration.getBody(), environment);
         }catch (ReturnException exception){
+            if(isInitializer){
+                return closure.getAt(0, "this");
+            }
             return exception.getValue();
         }
+        if(isInitializer ){
+            return closure.getAt(0, "this");
+        }
         return null;
+    }
+    public SilkFunction bind(SilkInstance instance){
+        Environment environment = new Environment(closure);
+        environment.define("this", instance);
+        return new SilkFunction(declaration, environment, isInitializer);
     }
     @Override
     public String toString() {
