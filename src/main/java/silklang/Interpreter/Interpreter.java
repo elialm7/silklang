@@ -8,7 +8,9 @@ package silklang.Interpreter;
 
 import silklang.App.Silk;
 import silklang.Callable.SilkCallable;
+import silklang.Callable.SilkClass;
 import silklang.Callable.SilkFunction;
+import silklang.Callable.SilkInstance;
 import silklang.Environment.Environment;
 import silklang.Error.JumpError;
 import silklang.Error.JumpType;
@@ -222,7 +224,11 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
 
     @Override
     public Object visitGetExpr(Get expr) {
-        return null;
+        Object value = evaluate(expr.getObject());
+        if(value instanceof SilkInstance){
+            return ((SilkInstance)value).get(expr.getName());
+        }
+        throw new RuntimeError(expr.getName(), "Solo las instancias pueden tener propiedades. ");
     }
 
     @Override
@@ -255,17 +261,34 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
 
     @Override
     public Object visitSetExpr(Set expr) {
-        return null;
+
+        Object object = evaluate(expr.getObject());
+
+        if(!(object instanceof  SilkInstance)){
+            throw new RuntimeError(expr.getName(), "Solo las instancias tienen campos. ");
+        }
+        Object value = evaluate(expr.getValue());
+        ((SilkInstance)value).set(expr.getName(), value );
+        return value;
     }
+
 
     @Override
     public Object visitSuperExpr(Super expr) {
-        return null;
+        int distance = locals.get(expr);
+        SilkClass superclass = (SilkClass) env.getAt(distance, "super");
+        SilkInstance object = (SilkInstance) env.getAt(distance - 1, "this");
+        SilkFunction method = superclass.findMethod(expr.getMethod().getLexeme());
+        if(method == null){
+            throw new RuntimeError(expr.getMethod(), "Propiedad no definida: '"+expr.getMethod().getLexeme()+"'.");
+        }
+        return method.bind(object);
     }
 
     @Override
     public Object visitThisExpr(This expr) {
-        return null;
+
+        return lookUpVariable(expr.getKeyword(), expr);
     }
 
     @Override
@@ -363,7 +386,7 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
 
     @Override
     public Void visitFunctionStmt(Function ft) {
-        SilkFunction function = new SilkFunction(ft, env);
+        SilkFunction function = new SilkFunction(ft, env, false);
         env.define(ft.getName().getLexeme(), function);
         return null;
     }
@@ -373,5 +396,32 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
         Object value = null;
         if(rt.getValue() != null) value = evaluate(rt.getValue());
         throw new ReturnException(value);
+    }
+
+    @Override
+    public Void visitClassStmt(SClass cl) {
+        Object superclass = null;
+        if(cl.getSuperclass()!= null){
+            superclass = evaluate(cl.getSuperclass());
+            if(!(superclass instanceof SilkClass)){
+                throw new RuntimeError(cl.getSuperclass().getName(), "La superclase tiene que ser una clase. ");
+            }
+        }
+        env.define(cl.getName().getLexeme(), null);
+        if(cl.getSuperclass() != null){
+            env = new Environment(env);
+            env.define("super",superclass);
+        }
+        Map<String, SilkFunction> methods = new HashMap<>();
+        for(Function method: cl.getFunctions()){
+            SilkFunction ft = new SilkFunction(method, env, method.getName().getLexeme().equals("init"));
+            methods.put(method.getName().getLexeme(), ft);
+        }
+        SilkClass silkClass = new SilkClass(cl.getName().getLexeme(), methods, (SilkClass) superclass);
+        if(superclass!= null){
+            env = env.getEnclosing();
+        }
+        env.assign(cl.getName(), silkClass);
+        return null;
     }
 }
