@@ -41,8 +41,11 @@ public class Silk{
         Option InterpretOnly = Option.builder("repl").hasArg(false).desc("Entra en el REPL[READ - EVAL - PRINT - LOOP]").build();
         Option InterpreteFileDesc = Option.builder("mr").longOpt("mrun")
                 .hasArg(true).argName("Archivo descriptor silk").desc("Lee un archivo de descripcion y luego interpreta las dependencias. ").build();
-        Option helpOption = Option.builder("h").hasArg(false).desc("Muesta la lista de ayuda").build();
+        Option helpOption = Option.builder("h").longOpt("help")
+                .hasArg(false).desc("Muesta la lista de ayuda").build();
+        Option versionDetails = Option.builder("v").longOpt("version").hasArg(false).desc("Muesta datos de la version y autores.").build();
         interpreterOptions.addOption(InterpretFile).addOption(InterpretOnly).addOption(InterpreteFileDesc).addOption(helpOption);
+        interpreterOptions.addOption(versionDetails);
         return interpreterOptions;
     }
 
@@ -57,17 +60,18 @@ public class Silk{
             if(cmd.hasOption("r")){
                 String silkFile = cmd.getOptionValue("r");
                 runFile(silkFile);
-            }else if(cmd.hasOption("run")){
-                String silkFile = cmd.getOptionValue("run");
-                runFile(silkFile);
             }else if(cmd.hasOption("repl")){
                 runPromt();
             }else if(cmd.hasOption("mr")){
                 String makeFile = cmd.getOptionValue("mr");
                 runMakeFile(makeFile);
-            }else if(cmd.hasOption("mrun")){
-                String makeFile = cmd.getOptionValue("mrun");
-                runMakeFile(makeFile);
+            }else if(cmd.hasOption("v")){
+                String builder = "Version: Version unica. " + "\n"+
+                        "Autor: R. Elias Ojeda Almada" +"\n"+
+                        "Contribuidor: Derlis diaz." +"\n"+
+                        "Apoyo Moral: Claudio Portillo, Victor montiel, Allam diaz, Ronald guerin";
+                System.out.println(builder);
+                System.exit(0);
             }else if(cmd.hasOption("h")){
                 HelpFormatter formatter = new HelpFormatter();
                 formatter.printHelp("Ayuda", interpreterOptions);
@@ -103,7 +107,7 @@ public class Silk{
     private static void runPromt() throws IOException{
         InputStreamReader input = new InputStreamReader(System.in);
         BufferedReader reader = new BufferedReader(input);
-        System.out.println("SilkLang-Interpreter Ultimate");
+        System.out.println("Bienvenido a silki, Interprete linea a linea del lenguaje silk.");
         System.out.println("Para salir escriba 'exit'");
         System.out.println("Copyright (c) under GPL V3.");
         String line = "";
