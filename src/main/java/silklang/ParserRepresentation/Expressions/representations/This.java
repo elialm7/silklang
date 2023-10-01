@@ -6,9 +6,9 @@
 
 package silklang.ParserRepresentation.Expressions.representations;
 
-import silklang.ParserRepresentation.Expressions.base.ExprVisitor;
-import silklang.ParserRepresentation.Expressions.base.Expr;
 import silklang.Lexer.Token;
+import silklang.ParserRepresentation.Expressions.base.Expr;
+import silklang.ParserRepresentation.Expressions.base.ExprVisitor;
 
 public class This extends Expr {
     private Token keyword;
@@ -16,13 +16,8 @@ public class This extends Expr {
     public This(Token keyword) {
         this.keyword = keyword;
     }
-
     public Token getKeyword() {
         return keyword;
-    }
-
-    public void setKeyword(Token keyword) {
-        this.keyword = keyword;
     }
 
     @Override
