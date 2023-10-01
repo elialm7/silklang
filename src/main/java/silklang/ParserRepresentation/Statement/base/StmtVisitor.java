@@ -19,4 +19,5 @@ public interface StmtVisitor<T>{
     T visitContinueStmt(Continue ct);
     T visitFunctionStmt(Function ft);
     T visitReturnStmt(Return rt);
+    T visitClassStmt(SClass cl);
 }
