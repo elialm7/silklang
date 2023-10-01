@@ -42,6 +42,7 @@ public class SilkParser {
             if(match(VAR)){
                 return varDeclaration();
             }
+            if(match(CLASS)) return classDeclaration();
             if(match(FUN)){
                 return function("function");
             }
@@ -51,6 +52,23 @@ public class SilkParser {
             synchronize();
             return null;
         }
+    }
+
+    private Stmt classDeclaration(){
+
+        Token name = consume(IDENTIFIER, "Se esperaba el nombre de la clase. ");
+        Variable superclass = null;
+        if(match(LESS)){
+            consume(IDENTIFIER, "se esperaba el nombre de la superclase.");
+            superclass = new Variable(previous());
+        }
+        consume(LEFT_BRACE, "Se esperaba '{' antes del cuerpo de la clase. ");
+        List<Function> methods = new ArrayList<>();
+        while(!check(RIGHT_BRACE) && !isAtEnd()){
+            methods.add((Function) function("metodo"));
+        }
+        consume(RIGHT_BRACE, "se esperaba '}' despues del cuerpo de la clase. ");
+        return new SClass(name, methods, superclass);
     }
 
     private Stmt function(String kind){
@@ -214,7 +232,11 @@ public class SilkParser {
             if(expr instanceof Variable){
                 Token name = ((Variable)expr).getName();
                 return new Assign(name, value);
+            }else if( expr instanceof  Get){
+                Get get = (Get) expr;
+                return new Set(get.getObject(), get.getName(), value);
             }
+
             error(equals, "Objetivo de asignamiento invalido. ");
         }
         return expr;
@@ -306,6 +328,10 @@ public class SilkParser {
         while(true){
             if(match(LEFT_PAREN)){
                 expr = finishcall(expr);
+
+            }else if(match(DOT)){
+                Token name = consume(IDENTIFIER, "Se esperaba el nombre de la propiedad despues del . ");
+                expr = new Get(expr, name);
             }else{
                 break;
             }
@@ -333,6 +359,16 @@ public class SilkParser {
         if(match(NUMBER, STRING)){
             return new Literal(previous().getLiteral());
         }
+
+        if(match(SUPER)){
+            Token keyword = previous();
+            consume(DOT, "Se esperaba '.' despues de la palabra reservada 'super' .");
+            Token method = consume(IDENTIFIER, "Se esperba el nombre de un metodo de la super clase. ");
+            return new Super(keyword, method);
+        }
+
+        if(match(THIS)) return new This(previous());
+
         if(match(IDENTIFIER)){
             return new Variable(previous());
         }
