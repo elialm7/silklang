@@ -5,8 +5,7 @@
 
 package silklang.Resolver;
 
-public enum FunctionType {
+public enum ClassType {
 
-    NONE, FUNCTION, METHOD, INITIALIZER
-
+    NONE, CLASS, SUBCLASS
 }
