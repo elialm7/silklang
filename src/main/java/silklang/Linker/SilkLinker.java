@@ -17,14 +17,12 @@ public class SilkLinker {
     private File originFile;
 
     private String absPath;
-    public SilkLinker(File descriptorFile) throws IOException {
-        this.fileContent = Files.readAllLines(descriptorFile.toPath());
-        this.originFile = descriptorFile.getParentFile();
-    }
-
     public SilkLinker(URI uri) throws IOException{
         this.absPath = uri.getPath().substring(1);
         this.originFile = new File(absPath);
+        if(!this.originFile.exists()){
+            throw new IOException("El archivo "+this.originFile.getName()+ "N no existe, ruta: "+this.absPath);
+        }
         this.fileContent = Files.readAllLines(originFile.toPath());
     }
     public List<String> getContent(){

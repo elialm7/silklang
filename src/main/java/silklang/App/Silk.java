@@ -66,10 +66,9 @@ public class Silk{
                 String makeFile = cmd.getOptionValue("mr");
                 runMakeFile(makeFile);
             }else if(cmd.hasOption("v")){
-                String builder = "Version: Version unica. " + "\n"+
-                        "Autor: R. Elias Ojeda Almada" +"\n"+
-                        "Contribuidor: Derlis diaz." +"\n"+
-                        "Apoyo Moral: Claudio Portillo, Victor montiel, Allam diaz, Ronald guerin";
+                String builder = "Version: Unica. " + "\n"+
+                        "Autor: R. Elias Ojeda Almada." +"\n"+
+                        "Copyright (c) under GPL V3.";
                 System.out.println(builder);
                 System.exit(0);
             }else if(cmd.hasOption("h")){
@@ -86,18 +85,32 @@ public class Silk{
         }
     }
 
-    private static void runMakeFile(String source) throws IOException {
-        var linker = new SilkLinker(new File(source).toURI());
-        var sourceBuilder = new StringBuilder();
-        var filestoLink = linker.getDependencies();
-        for(var arch: Collections.unmodifiableList(filestoLink)){
-            var lines = Files.readAllLines(arch.toPath());
-            sourceBuilder.append(String.join("", lines));
+    private static void runMakeFile(String source){
+        try {
+            var linker = new SilkLinker(new File(source).toURI());
+            var sourceBuilder = new StringBuilder();
+            var filestoLink = linker.getDependencies();
+            for (var arch : Collections.unmodifiableList(filestoLink)) {
+                if(!arch.exists()){
+                    throw new IOException("El archivo "+arch.getName()+ "N no existe, ruta: "+arch.getAbsolutePath());
+                }
+                var lines = Files.readAllLines(arch.toPath());
+                sourceBuilder.append(String.join("", lines));
+            }
+            run(sourceBuilder.toString());
+        }catch (IOException e){
+            System.out.println(e.getMessage());
+            System.exit(1);
         }
-        run(sourceBuilder.toString());
     }
-    private static void runFile(String path) throws IOException {
-        byte[] bytes = Files.readAllBytes(Paths.get(path));
+    private static void runFile(String path){
+        byte[] bytes = new byte[0];
+        try {
+             bytes = Files.readAllBytes(Paths.get(path));
+        }catch (IOException e){
+            System.out.println("No se pudo leer "+path+"; El archivo no existe o la ruta es incorrecta. ");
+            System.exit(1);
+        }
         run(new String(bytes, Charset.defaultCharset()));
         if(haderror)
             System.exit(65);
