@@ -59,7 +59,7 @@ public class SilkParser {
         Token name = consume(IDENTIFIER, "Se esperaba el nombre de la clase. ");
         Variable superclass = null;
         if(match(LESS)){
-            consume(IDENTIFIER, "se esperaba el nombre de la superclase.");
+            consume(IDENTIFIER, "Se esperaba el nombre de la superclase.");
             superclass = new Variable(previous());
         }
         consume(LEFT_BRACE, "Se esperaba '{' antes del cuerpo de la clase. ");
@@ -67,7 +67,7 @@ public class SilkParser {
         while(!check(RIGHT_BRACE) && !isAtEnd()){
             methods.add((Function) function("metodo"));
         }
-        consume(RIGHT_BRACE, "se esperaba '}' despues del cuerpo de la clase. ");
+        consume(RIGHT_BRACE, "Se esperaba '}' despues del cuerpo de la clase. ");
         return new SClass(name, methods, superclass);
     }
 
@@ -129,18 +129,18 @@ public class SilkParser {
 
     private Stmt continueStatement(){
         Token keyword = previous();
-        consume(SEMICOLON, "Se espera un ';' despues de un continue. ");
+        consume(SEMICOLON, "Se esperaba un ';' despues de un continue. ");
         return new Continue(keyword);
     }
     private Stmt breakStatement(){
         Token keyword = previous();
-        consume(SEMICOLON, "Se espera un ';' despues de un break. ");
+        consume(SEMICOLON, "Se esperaba un ';' despues de un break. ");
         return new Break(keyword);
     }
 
     private Stmt forStatement(){
 
-    	 consume(LEFT_PAREN, "Se espera '(' despues de un 'for' ");
+    	 consume(LEFT_PAREN, "Se esperaba '(' despues de un 'for' ");
 		 Stmt initializer;
 		 if (match(SEMICOLON)) {
 			  initializer = null;
@@ -153,13 +153,13 @@ public class SilkParser {
 		 if (!check(RIGHT_PAREN)) {
 			  increment = expression();
 		 }
-		 consume(RIGHT_PAREN, "Se espera ')' despues de las clausulas. ");
+		 consume(RIGHT_PAREN, "Se esperaba ')' despues de las clausulas. ");
 		 Stmt body = statement();
 		 Expr condition = null;
 		 if (!check(SEMICOLON)) {
 			  condition = expression();
 		 }
-		 consume(SEMICOLON, "Se espera ';' despues de la condicion. ");
+		 consume(SEMICOLON, "Se esperaba ';' despues de la condicion. ");
 		 if (increment != null) {
 			  body = new Block(Arrays.asList(body,new Expression(increment)));
 		 }
@@ -175,9 +175,9 @@ public class SilkParser {
 	}
 
     private Stmt whileStatement(){
-    	 consume(LEFT_PAREN, "Se espera '(' despues de un while.");
+    	 consume(LEFT_PAREN, "Se esperaba '(' despues de un while.");
     	 Expr condition = expression();
-    	 consume (RIGHT_PAREN, "Se espera ')' despues de una expresion en un while. ");
+    	 consume (RIGHT_PAREN, "Se esperaba ')' despues de una expresion en un while. ");
     	 Stmt body = statement();
     	 return new While(condition, body);
 	}
@@ -363,7 +363,7 @@ public class SilkParser {
         if(match(SUPER)){
             Token keyword = previous();
             consume(DOT, "Se esperaba '.' despues de la palabra reservada 'super' .");
-            Token method = consume(IDENTIFIER, "Se esperba el nombre de un metodo de la super clase. ");
+            Token method = consume(IDENTIFIER, "Se esperaba el nombre de un metodo de la super clase. ");
             return new Super(keyword, method);
         }
 
@@ -374,7 +374,7 @@ public class SilkParser {
         }
         if(match(LEFT_PAREN)){
             Expr expr = expression();
-            consume(RIGHT_PAREN, " Se espera una  ')' despues de una expresion. ");
+            consume(RIGHT_PAREN, " Se esperaba una  ')' despues de una expresion. ");
             return new Grouping(expr);
         }
         if(match(INPUT)){
