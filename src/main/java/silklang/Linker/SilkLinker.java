@@ -25,6 +25,9 @@ public class SilkLinker {
         }
         this.fileContent = Files.readAllLines(originFile.toPath());
     }
+    public SilkLinker(String abspath){
+        this.absPath = abspath;
+    }
     public List<String> getContent(){
         return this.fileContent;
     }
