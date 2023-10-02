@@ -12,5 +12,11 @@ import java.util.List;
 public interface SilkCallable {
 
     int arity();
+    default boolean variadic(){
+        return false;
+    }
     Object call(Interpreter interpreter, List<Object> arguments);
+    default String nativefuncString(){
+        return "fn <Native>";
+    }
 }
