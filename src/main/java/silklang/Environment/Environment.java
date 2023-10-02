@@ -31,7 +31,7 @@ public class Environment {
         if(enclosing!=null){
             return enclosing.get(name);
         }
-        throw new RuntimeError(name, "La variable '"+name.getLexeme()+"' no esta definida");
+        throw new RuntimeError(name, "La variable '"+name.getLexeme()+"' no esta definida. ");
     }
 
 
