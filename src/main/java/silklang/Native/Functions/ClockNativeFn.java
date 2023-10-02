@@ -3,14 +3,14 @@
  * All rights reserved.
  */
 
-package silklang.Native;
+package silklang.Native.Functions;
 
 import silklang.Callable.SilkCallable;
 import silklang.Interpreter.Interpreter;
 
 import java.util.List;
 
-public class ClockNativeFN implements SilkCallable {
+public class ClockNativeFn implements SilkCallable {
     @Override
     public int arity() {
         return 0;
@@ -23,6 +23,6 @@ public class ClockNativeFN implements SilkCallable {
 
     @Override
     public String toString() {
-        return "<Native Fn>";
+        return nativefuncString();
     }
 }
