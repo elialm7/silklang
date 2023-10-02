@@ -41,7 +41,7 @@ public class Resolver  implements ExprVisitor<Void>, StmtVisitor<Void> {
         if (scopes.isEmpty()) return;
         Map<String, Boolean> scope = scopes.peek();
         if(scope.containsKey(name.getLexeme())){
-            Silk.error(name, "Ya existe una variable con este nombre en este scope.");
+            Silk.error(name, "Ya existe una variable con este nombre en este alcance.");
         }
         scope.put(name.getLexeme(), false);
     }
@@ -60,7 +60,7 @@ public class Resolver  implements ExprVisitor<Void>, StmtVisitor<Void> {
     }
 
     public void resolveLocal(Expr expr, Token Name){
-        for(int i = scopes.size() - 1;i>= 0;i++){
+        for(int i = scopes.size()-1;i>=0;i--){
             if(scopes.get(i).containsKey(Name.getLexeme())){
                 interpreter.resolve(expr, scopes.size()-1-i);
                 return;
@@ -175,7 +175,7 @@ public class Resolver  implements ExprVisitor<Void>, StmtVisitor<Void> {
     public Void visitVariableExpr(Variable expr) {
 
         if(!scopes.isEmpty() && scopes.peek().get(expr.getName().getLexeme()) == Boolean.FALSE){
-            Silk.error(expr.getName(), "No se puede leer una variable local en su propia initiilizacion. ");
+            Silk.error(expr.getName(), "No se puede leer una variable local en su propia inicializacion. ");
         }
         resolveLocal(expr, expr.getName());
         return null;
@@ -258,7 +258,7 @@ public class Resolver  implements ExprVisitor<Void>, StmtVisitor<Void> {
     public Void visitReturnStmt(Return rt) {
 
         if(currentFunction == FunctionType.NONE){
-            Silk.error(rt.getKeyword(), "No se puede retornar de codigo Top-Level.");
+            Silk.error(rt.getKeyword(), "No se puede retornar de codigo de primer nivel.");
         }
         if(rt.getValue() != null){
             if(currentFunction == FunctionType.INITIALIZER){
