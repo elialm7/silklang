@@ -18,7 +18,7 @@ import silklang.Error.ReturnException;
 import silklang.Error.RuntimeError;
 import silklang.Lexer.Token;
 import silklang.Lexer.TokenType;
-import silklang.Native.ClockNativeFN;
+import silklang.Native.Functions.*;
 import silklang.ParserRepresentation.Expressions.base.Expr;
 import silklang.ParserRepresentation.Expressions.base.ExprVisitor;
 import silklang.ParserRepresentation.Expressions.representations.Set;
@@ -42,7 +42,17 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
         defineNativeFunctions();
     }
     private void defineNativeFunctions(){
-        this.globals.define("Clock", new ClockNativeFN());
+        this.globals.define("clock", new ClockNativeFn());
+        this.globals.define("input", new InputNativeFn());
+        this.globals.define("inputln", new InputlnNativeFn());
+        this.globals.define("type", new TypeNativeFn());
+        this.globals.define("echo", new EchoNativeFn());
+        this.globals.define("isNumber", new IsNumberNativeFn());
+        this.globals.define("isString", new IsStringNativeFn());
+        this.globals.define("isBoolean", new IsBooleanNativeFn());
+        this.globals.define("exit", new ExitNativeFn());
+        this.globals.define("array", new ArrayNativeFn());
+        this.globals.define("math", new MathNativeFn());
     }
     public Environment getGlobals(){
         return this.globals;
@@ -89,7 +99,7 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
     }
 
 
-    private String stringify(Object object) {
+    public String stringify(Object object) {
         if (object == null) return "nil";
         if (object instanceof Double) {
             String text = object.toString();
@@ -211,13 +221,13 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
             arguments.add(evaluate(argument));
         }
         SilkCallable function = (SilkCallable) callee;
-        if(arguments.size() != function.arity()){
+        if(arguments.size() != function.arity() && !function.variadic()){
             throw new RuntimeError(expr.getParen(), "Se esperaba " +
-                    function.arity() + " de argumentos pero se tuvo" +
-                    arguments.size() + ".");
+                    function.arity() + " de argumentos pero se tuvo " +
+                    arguments.size() + " . ");
         }
         if(!(callee instanceof SilkCallable)){
-            throw new RuntimeError(expr.getParen(), "Solo se pueden llamar funciones y clases. ");
+            throw new RuntimeError(expr.getParen(), " Solo se pueden llamar funciones y clases. ");
         }
         return function.call(this,arguments);
     }
@@ -228,7 +238,7 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
         if(value instanceof SilkInstance){
             return ((SilkInstance)value).get(expr.getName());
         }
-        throw new RuntimeError(expr.getName(), "Solo las instancias pueden tener propiedades. ");
+        throw new RuntimeError(expr.getName(), " Solo las instancias pueden tener propiedades. ");
     }
 
     @Override
