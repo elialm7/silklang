@@ -6,6 +6,7 @@
 package silklang.Callable;
 
 import silklang.Interpreter.Interpreter;
+import silklang.Lexer.Token;
 
 import java.util.List;
 
@@ -15,8 +16,11 @@ public interface SilkCallable {
     default boolean variadic(){
         return false;
     }
-    Object call(Interpreter interpreter, List<Object> arguments);
+    Object call(Interpreter interpreter, List<Object> arguments, Token paren);
     default String nativefuncString(){
         return "fn <Native>";
+    }
+    default String usage(){
+        return "No usage";
     }
 }
