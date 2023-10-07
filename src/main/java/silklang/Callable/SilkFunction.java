@@ -8,6 +8,7 @@ package silklang.Callable;
 import silklang.Environment.Environment;
 import silklang.Error.ReturnException;
 import silklang.Interpreter.Interpreter;
+import silklang.Lexer.Token;
 import silklang.ParserRepresentation.Statement.Representation.Function;
 
 import java.util.List;
@@ -28,7 +29,7 @@ public class SilkFunction implements SilkCallable{
     }
 
     @Override
-    public Object call(Interpreter interpreter, List<Object> arguments) {
+    public Object call(Interpreter interpreter, List<Object> arguments, Token paren) {
         Environment environment = new Environment(closure);
         for (int i = 0; i <  declaration.getParams().size() ; i++) {
             environment.define(declaration.getParams().get(i).getLexeme(), arguments.get(i));
