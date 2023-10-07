@@ -3,22 +3,29 @@
  * All rights reserved.
  */
 
-package silklang.Native.Functions;
+package silklang.Native.lang.functions;
 
 import silklang.Callable.SilkCallable;
 import silklang.Interpreter.Interpreter;
+import silklang.Lexer.Token;
 
 import java.util.List;
 
-public class ClockNativeFn implements SilkCallable {
+public class EchoNativeFn implements SilkCallable {
     @Override
     public int arity() {
         return 0;
     }
 
     @Override
-    public Object call(Interpreter interpreter, List<Object> arguments) {
-        return (double)System.currentTimeMillis()/1000.0;
+    public boolean variadic() {
+        return true;
+    }
+
+    @Override
+    public Object call(Interpreter interpreter, List<Object> arguments, Token paren) {
+        arguments.stream().map(interpreter::stringify).forEach(System.out::println);
+        return null;
     }
 
     @Override

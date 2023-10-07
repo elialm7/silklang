@@ -3,10 +3,11 @@
  * All rights reserved.
  */
 
-package silklang.Native.Functions;
+package silklang.Native.lang.functions;
 
 import silklang.Callable.SilkCallable;
 import silklang.Interpreter.Interpreter;
+import silklang.Lexer.Token;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ public class TypeNativeFn implements SilkCallable {
     }
 
     @Override
-    public Object call(Interpreter interpreter, List<Object> arguments) {
+    public Object call(Interpreter interpreter, List<Object> arguments, Token paren) {
         Object valuetype = arguments.get(0);
         if(valuetype instanceof Double){
             System.out.println("<NUMBER>");

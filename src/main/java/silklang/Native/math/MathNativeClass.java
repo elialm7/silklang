@@ -3,7 +3,7 @@
  * All rights reserved.
  */
 
-package silklang.Native.Classes;
+package silklang.Native.math;
 
 import silklang.Callable.SilkCallable;
 import silklang.Callable.SilkInstance;
@@ -44,7 +44,7 @@ public class MathNativeClass extends SilkInstance {
             return 2;
         }
         @Override
-        public Object call(Interpreter interpreter, List<Object> arguments) {
+        public Object call(Interpreter interpreter, List<Object> arguments, Token paren) {
             Object valueMin = arguments.get(0);
             Object valueMax = arguments.get(1);
             if(valueMin  instanceof Double && valueMax instanceof  Double){
@@ -54,7 +54,7 @@ public class MathNativeClass extends SilkInstance {
                 int rand = ramdon.nextInt(max - min) + min;
                 return (double)rand;
             }else{
-                throw new RuntimeError(name, "El metodo random acepta dos parametros de tipo <NUMBER>, .random(<NUMBER>, <NUMBER>)");
+                throw new RuntimeError(paren, "El metodo random acepta dos parametros de tipo <NUMBER>, .random(<NUMBER>, <NUMBER>)");
             }
 
         }

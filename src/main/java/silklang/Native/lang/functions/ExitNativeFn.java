@@ -3,11 +3,12 @@
  * All rights reserved.
  */
 
-package silklang.Native.Functions;
+package silklang.Native.lang.functions;
 
 import silklang.Callable.SilkCallable;
 import silklang.Error.RuntimeError;
 import silklang.Interpreter.Interpreter;
+import silklang.Lexer.Token;
 
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class ExitNativeFn implements SilkCallable {
     }
 
     @Override
-    public Object call(Interpreter interpreter, List<Object> arguments) {
+    public Object call(Interpreter interpreter, List<Object> arguments, Token paren) {
         if(arguments.size() == 0){
             System.exit(0);
         }
@@ -35,7 +36,7 @@ public class ExitNativeFn implements SilkCallable {
             int endValue = newValue.intValue();
             System.exit(endValue);
         }else{
-           throw new RuntimeError(null, "se esperaba un tipo NUMBER, no un " + interpreter.stringify(value));
+           throw new RuntimeError(paren, "se esperaba un tipo NUMBER, no un " + interpreter.stringify(value));
         }
         return null;
     }

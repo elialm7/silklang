@@ -18,7 +18,8 @@ import silklang.Error.ReturnException;
 import silklang.Error.RuntimeError;
 import silklang.Lexer.Token;
 import silklang.Lexer.TokenType;
-import silklang.Native.Functions.*;
+import silklang.Native.lang.functions.*;
+import silklang.Native.math.MathNativeFn;
 import silklang.ParserRepresentation.Expressions.base.Expr;
 import silklang.ParserRepresentation.Expressions.base.ExprVisitor;
 import silklang.ParserRepresentation.Expressions.representations.Set;
@@ -34,10 +35,10 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
 
     private Environment env;
     private Environment globals;
-
-    private Map<Expr, Integer> locals = new HashMap<>();
+    private Map<Expr, Integer> locals;
     public Interpreter(){
         this.globals = new Environment();
+        this.locals = new HashMap<>();
         this.env = globals;
         defineNativeFunctions();
     }
@@ -51,8 +52,15 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
         this.globals.define("isString", new IsStringNativeFn());
         this.globals.define("isBoolean", new IsBooleanNativeFn());
         this.globals.define("exit", new ExitNativeFn());
-        this.globals.define("array", new ArrayNativeFn());
+        this.globals.define("toNumber", new ToNumberNativeFn());
+        this.globals.define("toString", new ToStringNativeFn());//
+        this.globals.define("toBoolean", new ToBooleanNativeFn());//
+        this.globals.define("toVector", new ToVectorNativeFn());//
         this.globals.define("math", new MathNativeFn());
+        this.globals.define("vector", new VectorNativeFn());
+        this.globals.define("string", new SilkStringNativeFunction());
+        this.globals.define("file", new FileNativeFn());
+
     }
     public Environment getGlobals(){
         return this.globals;
@@ -216,6 +224,7 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
     public Object visitCallExpr(Call expr) {
 
         Object callee = evaluate(expr.getCallee());
+        Token token = expr.getParen();
         List<Object> arguments = new ArrayList<>();
         for(Expr argument: expr.getArguments()){
             arguments.add(evaluate(argument));
@@ -229,7 +238,7 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
         if(!(callee instanceof SilkCallable)){
             throw new RuntimeError(expr.getParen(), " Solo se pueden llamar funciones y clases. ");
         }
-        return function.call(this,arguments);
+        return function.call(this,arguments, token);
     }
 
     @Override

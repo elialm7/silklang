@@ -3,24 +3,23 @@
  * All rights reserved.
  */
 
-package silklang.Native.Functions;
+package silklang.Native.math;
 
 import silklang.Callable.SilkCallable;
 import silklang.Interpreter.Interpreter;
+import silklang.Lexer.Token;
 
 import java.util.List;
-import java.util.Scanner;
 
-public class InputNativeFn implements SilkCallable {
+public class MathNativeFn implements SilkCallable {
     @Override
     public int arity() {
-        return 1;
+        return 0;
     }
+
     @Override
-    public Object call(Interpreter interpreter, List<Object> arguments) {
-        System.out.print(interpreter.stringify(arguments.get(0)));
-        Scanner scanner = new Scanner(System.in);
-        return scanner.nextLine();
+    public Object call(Interpreter interpreter, List<Object> arguments, Token paren) {
+        return new MathNativeClass();
     }
 
     @Override
