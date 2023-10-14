@@ -14,7 +14,7 @@
 <hr>
 
 ## Comandos
-<p>Para poder seguir estos comandos, Asegurarse de haber instalado y que se halla agregado al path.</p>
+<p>Para poder seguir estos comandos, Asegurarse de haber instalado las herramientas y que se hallan agregado al path.</p>
 <p>Abrir una terminal de preferencia (cmd, powershell, etc)</p>
 
 1. `git clone https://github.com/elikawa7/silklang.git` 
@@ -27,5 +27,11 @@
 <p>Si los pasos fueron exitosos deberia mostrar esto en tu terminal. </p>
 
 ![Resultado](img/example.png?raw=true)
+
+
+<hr>
+
+## Otros
+<p>Tambien puede probar el ejecutable descargando desde <a href="https://github.com/elikawa7/silklang/releases/tag/unique"> Releases </a></p>
 
 
