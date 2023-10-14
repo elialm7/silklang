@@ -82,7 +82,6 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
     }
 
     public void interpret(List<Stmt> statements){
-
         try{
             for(Stmt st: statements){
                 execute(st);
@@ -224,10 +223,12 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
     public Object visitCallExpr(Call expr) {
 
         Object callee = evaluate(expr.getCallee());
-        Token token = expr.getParen();
         List<Object> arguments = new ArrayList<>();
         for(Expr argument: expr.getArguments()){
             arguments.add(evaluate(argument));
+        }
+        if(!(callee instanceof SilkCallable)){
+            throw new RuntimeError(expr.getParen(), " Solo se pueden llamar funciones y clases. ");
         }
         SilkCallable function = (SilkCallable) callee;
         if(arguments.size() != function.arity() && !function.variadic()){
@@ -235,10 +236,8 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
                     function.arity() + " de argumentos pero se tuvo " +
                     arguments.size() + " . ");
         }
-        if(!(callee instanceof SilkCallable)){
-            throw new RuntimeError(expr.getParen(), " Solo se pueden llamar funciones y clases. ");
-        }
-        return function.call(this,arguments, token);
+
+        return function.call(this, arguments, expr.getParen());
     }
 
     @Override
@@ -281,13 +280,13 @@ public class Interpreter implements ExprVisitor<Object>, StmtVisitor<Void> {
     @Override
     public Object visitSetExpr(Set expr) {
 
-        Object object = evaluate(expr.getObject());
 
+        Object object = evaluate(expr.getObject());
         if(!(object instanceof  SilkInstance)){
             throw new RuntimeError(expr.getName(), "Solo las instancias tienen campos. ");
         }
         Object value = evaluate(expr.getValue());
-        ((SilkInstance)value).set(expr.getName(), value );
+        ((SilkInstance)value).set(expr.getName(), value);
         return value;
     }
 

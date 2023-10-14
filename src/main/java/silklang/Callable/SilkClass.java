@@ -50,11 +50,11 @@ public class SilkClass implements SilkCallable {
     }
 
     @Override
-    public Object call(Interpreter interpreter, List<Object> arguments, Token paren ) {
+    public Object call(Interpreter interpreter, List<Object> arguments, Token paren) {
         SilkInstance instance = new SilkInstance(this);
         SilkFunction initializer = findMethod("init");
         if(initializer != null){
-            initializer.bind(instance).call(interpreter, arguments, paren);
+            initializer.bind(instance).call(interpreter, arguments,paren);
         }
         return instance;
     }
