@@ -26,6 +26,6 @@
 <hr>
 <p>Si los pasos fueron exitosos deberia mostrar esto en tu terminal. </p>
 
-![Resultado](https://github.com/elikawa/silklang/blob/master/img/example.png?raw=true)
+![Resultado](img/example.png?raw=true)
 
 
